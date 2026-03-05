@@ -1,0 +1,4041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamVault — Watch Movies Online</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ── RESET ── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+/* ── VARS ── */
+:root{
+  --red:#e50914;
+  --red2:#b20710;
+  --dark:#0f0f0f;
+  --dark2:#181818;
+  --dark3:#222;
+  --card:#1a1a1a;
+  --text:#e5e5e5;
+  --muted:#a3a3a3;
+  --faint:#3a3a3a;
+  --white:#fff;
+  --radius:4px;
+}
+
+/* ── BODY ── */
+body{
+  background:var(--dark);
+  color:var(--text);
+  font-family:'Inter',sans-serif;
+  font-weight:400;
+  overflow-x:hidden;
+  min-height:100vh;
+}
+
+/* ── NAV ── */
+nav{
+  position:fixed;
+  top:0;left:0;right:0;
+  z-index:200;
+  height:64px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 3rem;
+  background:linear-gradient(to bottom,rgba(15,15,15,0.98) 80%,transparent);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  transition:background 0.3s;
+}
+.nav-left{display:flex;align-items:center;gap:2.5rem}
+.logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.9rem;
+  letter-spacing:0.05em;
+  color:var(--red);
+  text-decoration:none;
+  flex-shrink:0;
+}
+.logo span{color:var(--white)}
+nav ul{display:flex;gap:0.2rem;list-style:none}
+nav ul a{
+  color:var(--muted);
+  text-decoration:none;
+  font-size:0.82rem;
+  font-weight:500;
+  padding:0.4rem 0.8rem;
+  border-radius:var(--radius);
+  transition:all 0.15s;
+  letter-spacing:0.02em;
+}
+nav ul a:hover,nav ul a.active{color:var(--white);background:rgba(255,255,255,0.06)}
+.nav-right{display:flex;align-items:center;gap:0.8rem}
+.nav-search{
+  display:flex;align-items:center;gap:0.5rem;
+  background:rgba(255,255,255,0.06);
+  border:1px solid var(--faint);
+  border-radius:var(--radius);
+  padding:0.4rem 0.9rem;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-size:0.82rem;
+  color:var(--muted);
+}
+.nav-search:hover{background:rgba(255,255,255,0.1);border-color:var(--muted);color:var(--white)}
+.nav-search svg{width:14px;height:14px;flex-shrink:0}
+.btn-signin{
+  background:var(--red);
+  color:var(--white);
+  border:none;
+  padding:0.45rem 1.2rem;
+  font-family:'Inter',sans-serif;
+  font-size:0.82rem;
+  font-weight:600;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:background 0.2s;
+  letter-spacing:0.02em;
+}
+.btn-signin:hover{background:var(--red2)}
+
+/* ── HERO ── */
+.hero{
+  position:relative;
+  height:88vh;
+  min-height:560px;
+  display:flex;
+  align-items:flex-end;
+  padding:0 3rem 5rem;
+  overflow:hidden;
+  margin-top:64px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 60% 30%, #2a0505 0%, transparent 55%),
+    radial-gradient(ellipse at 20% 80%, #1a0a00 0%, transparent 40%),
+    linear-gradient(135deg,#0f0f0f 0%,#1a0505 60%,#0f0f0f 100%);
+}
+.hero-overlay{
+  position:absolute;inset:0;
+  background:
+    linear-gradient(to right,rgba(15,15,15,0.95) 35%,rgba(15,15,15,0.1) 100%),
+    linear-gradient(to top,rgba(15,15,15,1) 0%,rgba(15,15,15,0.2) 50%,transparent 100%);
+}
+.hero-content{position:relative;z-index:2;max-width:560px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  background:var(--red);
+  color:var(--white);
+  font-size:0.7rem;
+  font-weight:700;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  padding:0.3rem 0.8rem;
+  border-radius:2px;
+  margin-bottom:1.2rem;
+}
+.hero-badge::before{content:'▶';font-size:0.6rem}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(3rem,7vw,5.5rem);
+  line-height:1;
+  color:var(--white);
+  letter-spacing:0.02em;
+  margin-bottom:1rem;
+  text-shadow:0 2px 20px rgba(0,0,0,0.5);
+}
+.hero h1 em{color:var(--red);font-style:normal}
+.hero-meta{
+  display:flex;align-items:center;gap:1rem;
+  margin-bottom:1rem;
+  font-size:0.82rem;
+  color:var(--muted);
+  flex-wrap:wrap;
+}
+.hero-rating{color:#f5c518;font-weight:600}
+.hero-genre-tag{
+  background:rgba(255,255,255,0.08);
+  padding:0.2rem 0.6rem;
+  border-radius:20px;
+  font-size:0.72rem;
+  color:var(--muted);
+}
+.hero p{
+  font-size:0.95rem;
+  line-height:1.65;
+  color:rgba(229,229,229,0.75);
+  max-width:460px;
+  margin-bottom:2rem;
+}
+.hero-actions{display:flex;gap:0.8rem;flex-wrap:wrap}
+.btn-play{
+  display:flex;align-items:center;gap:0.6rem;
+  background:var(--red);
+  color:var(--white);
+  border:none;
+  padding:0.75rem 1.8rem;
+  font-family:'Inter',sans-serif;
+  font-size:0.9rem;
+  font-weight:600;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all 0.2s;
+  letter-spacing:0.02em;
+}
+.btn-play:hover{background:var(--red2);transform:scale(1.02)}
+.btn-play svg{width:18px;height:18px}
+.btn-more{
+  display:flex;align-items:center;gap:0.6rem;
+  background:rgba(255,255,255,0.1);
+  color:var(--white);
+  border:1px solid rgba(255,255,255,0.15);
+  padding:0.75rem 1.6rem;
+  font-family:'Inter',sans-serif;
+  font-size:0.9rem;
+  font-weight:500;
+  border-radius:var(--radius);
+  cursor:pointer;
+  transition:all 0.2s;
+}
+.btn-more:hover{background:rgba(255,255,255,0.18)}
+
+/* ── GENRE NAV ── */
+.genre-nav{
+  position:sticky;
+  top:64px;
+  z-index:100;
+  background:rgba(15,15,15,0.97);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--faint);
+  padding:0 3rem;
+  display:flex;
+  gap:0.3rem;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+.genre-nav::-webkit-scrollbar{display:none}
+.genre-btn{
+  white-space:nowrap;
+  background:none;
+  border:none;
+  color:var(--muted);
+  font-family:'Inter',sans-serif;
+  font-size:0.82rem;
+  font-weight:500;
+  padding:0.9rem 1rem;
+  cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:all 0.15s;
+  letter-spacing:0.02em;
+}
+.genre-btn:hover{color:var(--white)}
+.genre-btn.active{color:var(--white);border-bottom-color:var(--red)}
+
+/* ── MAIN ── */
+main{padding:1.5rem 0 4rem}
+
+/* ── SECTION ── */
+.movie-section{padding:2.5rem 3rem 0}
+.section-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1.2rem;
+}
+.section-title{
+  font-size:1.1rem;
+  font-weight:600;
+  color:var(--white);
+  letter-spacing:0.01em;
+}
+.see-all{
+  font-size:0.78rem;
+  color:var(--red);
+  text-decoration:none;
+  font-weight:500;
+  transition:color 0.2s;
+  letter-spacing:0.02em;
+}
+.see-all:hover{color:var(--red2)}
+
+/* ── GRID ── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:0.8rem;
+}
+
+/* ── CARD ── */
+.card{cursor:pointer;position:relative}
+.card-poster{
+  aspect-ratio:2/3;
+  border-radius:var(--radius);
+  overflow:hidden;
+  position:relative;
+  transition:transform 0.25s ease, box-shadow 0.25s ease;
+}
+.card:hover .card-poster{
+  transform:scale(1.04);
+  box-shadow:0 12px 40px rgba(0,0,0,0.7),0 0 0 2px var(--red);
+  z-index:2;
+}
+.poster-text{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:1rem;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1rem;
+  letter-spacing:0.08em;
+  color:rgba(255,255,255,0.18);
+  word-break:break-word;
+}
+
+/* poster gradient themes */
+.ga{background:linear-gradient(160deg,#1a0a0a 0%,#2d0f0f 40%,#0f0a0a 100%)}
+.gb{background:linear-gradient(160deg,#0a0a1a 0%,#0f1530 40%,#080810 100%)}
+.gc{background:linear-gradient(160deg,#0a1a0a 0%,#0f2015 40%,#080808 100%)}
+.gd{background:linear-gradient(160deg,#1a120a 0%,#2a1a0a 40%,#100a05 100%)}
+.ge{background:linear-gradient(160deg,#0f0a1a 0%,#1a0f2a 40%,#080808 100%)}
+.gf{background:linear-gradient(160deg,#0a1520 0%,#0f2030 40%,#050a0f 100%)}
+.gg{background:linear-gradient(160deg,#1a0a10 0%,#2a0f18 40%,#100508 100%)}
+.gh{background:linear-gradient(160deg,#0f1a0a 0%,#182a0f 40%,#080f05 100%)}
+
+/* real poster image */
+.card-poster.has-poster { background: #111; }
+.card-poster.has-poster .poster-text { display: none; }
+.poster-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  transition: transform 0.25s ease;
+}
+.card:hover .poster-img { transform: scale(1.04); }
+
+/* card hover overlay */
+.card-hover{
+  position:absolute;inset:0;
+  background:linear-gradient(to top,rgba(0,0,0,0.95) 0%,rgba(0,0,0,0.5) 50%,rgba(0,0,0,0.1) 100%);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:flex-end;
+  padding:1rem;
+  opacity:0;
+  transition:opacity 0.25s;
+}
+.card:hover .card-hover{opacity:1}
+.hover-play{
+  width:48px;height:48px;
+  background:var(--red);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:0.8rem;
+  flex-shrink:0;
+  box-shadow:0 4px 15px rgba(229,9,20,0.5);
+}
+.hover-play svg{margin-left:3px}
+.hover-info{width:100%;text-align:center}
+.hover-title{font-size:0.82rem;font-weight:600;color:var(--white);margin-bottom:0.3rem;line-height:1.2}
+.hover-meta{font-size:0.7rem;color:var(--muted);margin-bottom:0.2rem}
+.hover-genre{font-size:0.67rem;color:rgba(229,9,20,0.9)}
+
+/* card bottom info */
+.card-info{padding:0.5rem 0 0}
+.card-name{
+  font-size:0.82rem;
+  font-weight:500;
+  color:var(--text);
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-bottom:0.15rem;
+}
+.card-meta2{font-size:0.72rem;color:var(--muted)}
+
+/* ── BADGES ── */
+.badge{
+  position:absolute;top:0.5rem;left:0.5rem;
+  font-size:0.58rem;font-weight:700;letter-spacing:0.1em;
+  padding:0.2rem 0.45rem;border-radius:2px;z-index:2;
+  text-transform:uppercase;
+}
+.badge-new{background:var(--red);color:#fff}
+.badge-top{background:#f5c518;color:#000}
+.badge-award{background:rgba(255,255,255,0.15);color:#fff;backdrop-filter:blur(4px)}
+.badge-classic{background:rgba(255,255,255,0.08);color:var(--muted);backdrop-filter:blur(4px)}
+
+/* ── MODAL ── */
+.modal-backdrop{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.88);
+  z-index:500;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(8px);
+  padding:1rem;
+}
+.modal-backdrop.open{display:flex}
+.modal{
+  background:#181818;
+  border-radius:6px;
+  width:100%;
+  max-width:780px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid var(--faint);
+  animation:modalPop 0.28s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes modalPop{
+  from{opacity:0;transform:scale(0.92) translateY(16px)}
+  to{opacity:1;transform:scale(1) translateY(0)}
+}
+.modal-close{
+  position:absolute;top:1rem;right:1rem;
+  width:32px;height:32px;
+  background:rgba(0,0,0,0.6);
+  border:1px solid var(--faint);
+  border-radius:50%;
+  color:var(--text);
+  font-size:1.1rem;
+  cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all 0.2s;
+  z-index:10;
+  line-height:1;
+}
+.modal-close:hover{background:var(--red);border-color:var(--red);color:#fff}
+.modal-video-area{
+  aspect-ratio:16/9;
+  background:#000;
+  display:flex;align-items:center;justify-content:center;
+  position:relative;
+  overflow:hidden;
+}
+.modal-video-placeholder{
+  display:flex;flex-direction:column;align-items:center;gap:1rem;
+  color:var(--muted);font-size:0.82rem;letter-spacing:0.05em;
+}
+.modal-play-btn{
+  width:64px;height:64px;
+  background:var(--red);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:all 0.2s;
+  box-shadow:0 6px 24px rgba(229,9,20,0.4);
+}
+.modal-play-btn:hover{background:var(--red2);transform:scale(1.08)}
+.modal-play-btn svg{margin-left:4px}
+.modal-body{padding:1.5rem}
+.modal-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2rem;
+  letter-spacing:0.04em;
+  color:var(--white);
+  margin-bottom:0.6rem;
+  line-height:1;
+}
+.modal-tags{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.9rem}
+.modal-tag{
+  background:rgba(255,255,255,0.07);
+  border:1px solid var(--faint);
+  color:var(--muted);
+  font-size:0.7rem;
+  padding:0.2rem 0.65rem;
+  border-radius:20px;
+  letter-spacing:0.04em;
+}
+.modal-tag.rating-tag{background:rgba(245,197,24,0.1);border-color:rgba(245,197,24,0.3);color:#f5c518}
+.modal-desc{
+  font-size:0.88rem;line-height:1.7;
+  color:rgba(229,229,229,0.7);
+  margin-bottom:1.4rem;
+}
+.modal-actions{display:flex;gap:0.7rem;flex-wrap:wrap}
+.modal-btn-play{
+  display:flex;align-items:center;gap:0.5rem;
+  background:var(--red);color:#fff;
+  border:none;padding:0.65rem 1.5rem;
+  font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:600;
+  border-radius:var(--radius);cursor:pointer;transition:background 0.2s;
+}
+.modal-btn-play:hover{background:var(--red2)}
+.modal-btn-ghost{
+  display:flex;align-items:center;gap:0.5rem;
+  background:rgba(255,255,255,0.07);color:var(--text);
+  border:1px solid var(--faint);padding:0.65rem 1.2rem;
+  font-family:'Inter',sans-serif;font-size:0.85rem;font-weight:500;
+  border-radius:var(--radius);cursor:pointer;transition:all 0.2s;
+}
+.modal-btn-ghost:hover{background:rgba(255,255,255,0.13);border-color:var(--muted)}
+
+/* ── SEARCH OVERLAY ── */
+.search-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.96);
+  z-index:600;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  padding-top:100px;
+}
+.search-overlay.open{display:flex}
+.search-inner{width:90%;max-width:680px}
+.search-bar{
+  display:flex;align-items:center;gap:1rem;
+  border-bottom:2px solid var(--red);
+  padding-bottom:0.5rem;
+  margin-bottom:2rem;
+}
+.search-bar svg{width:22px;height:22px;color:var(--red);flex-shrink:0}
+.search-input{
+  flex:1;background:transparent;border:none;outline:none;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:2.2rem;letter-spacing:0.05em;
+  color:var(--white);caret-color:var(--red);
+}
+.search-input::placeholder{color:var(--faint)}
+.search-x{
+  background:none;border:none;color:var(--muted);
+  font-size:1.8rem;cursor:pointer;transition:color 0.2s;padding:0;
+}
+.search-x:hover{color:var(--white)}
+.search-hint{font-size:0.72rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:1rem}
+.search-results{display:flex;flex-wrap:wrap;gap:0.5rem}
+.search-result-pill{
+  background:rgba(255,255,255,0.05);border:1px solid var(--faint);
+  color:var(--text);padding:0.5rem 1rem;
+  font-size:0.82rem;border-radius:var(--radius);cursor:pointer;
+  transition:all 0.15s;text-align:left;
+}
+.search-result-pill:hover{border-color:var(--red);color:var(--white);background:rgba(229,9,20,0.08)}
+.search-result-pill strong{display:block;color:var(--white);margin-bottom:0.1rem}
+.search-result-pill span{font-size:0.7rem;color:var(--muted)}
+.search-quick-label{font-size:0.68rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--muted);margin-bottom:0.7rem}
+.search-quick{display:flex;flex-wrap:wrap;gap:0.4rem}
+.quick-pill{
+  background:rgba(255,255,255,0.04);border:1px solid var(--faint);
+  color:var(--muted);padding:0.35rem 0.9rem;font-size:0.78rem;
+  border-radius:20px;cursor:pointer;transition:all 0.15s;
+}
+.quick-pill:hover{color:var(--white);border-color:var(--muted)}
+
+/* ── FOOTER ── */
+footer{
+  margin-top:4rem;
+  border-top:1px solid var(--faint);
+  padding:3rem;
+  display:grid;
+  grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:2rem;
+}
+.footer-logo{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:1.6rem;letter-spacing:0.05em;
+  color:var(--red);margin-bottom:0.8rem;display:block;
+}
+.footer-logo span{color:var(--white)}
+footer p{font-size:0.8rem;color:var(--muted);line-height:1.6;max-width:240px}
+.footer-col h4{font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--white);margin-bottom:1rem}
+.footer-col ul{list-style:none}
+.footer-col li{margin-bottom:0.6rem}
+.footer-col a{font-size:0.8rem;color:var(--muted);text-decoration:none;transition:color 0.15s}
+.footer-col a:hover{color:var(--red)}
+.footer-bottom{
+  padding:1.2rem 3rem;
+  border-top:1px solid var(--faint);
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:0.72rem;color:var(--muted);
+}
+
+/* ── RESPONSIVE ── */
+@media(max-width:900px){
+  nav{padding:0 1.2rem}
+  nav ul{display:none}
+  .hero{padding:0 1.2rem 3.5rem}
+  .genre-nav{padding:0 1.2rem}
+  .movie-section{padding:2rem 1.2rem 0}
+  footer{grid-template-columns:1fr 1fr;padding:2rem 1.2rem}
+  .footer-bottom{padding:1rem 1.2rem;flex-direction:column;gap:0.5rem;text-align:center}
+}
+@media(max-width:600px){
+  .grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:0.6rem}
+  .hero h1{font-size:2.6rem}
+  footer{grid-template-columns:1fr}
+}
+
+/* ── AUTH PAGES ──────────────────────────────────────────────────────────── */
+.auth-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 800;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.92);
+  backdrop-filter: blur(12px);
+  padding: 1rem;
+}
+.auth-overlay.open { display: flex; }
+
+.auth-box {
+  background: #141414;
+  border: 1px solid var(--faint);
+  border-radius: 8px;
+  width: 100%;
+  max-width: 420px;
+  padding: 2.5rem;
+  position: relative;
+  animation: authPop 0.3s cubic-bezier(0.34,1.4,0.64,1);
+}
+@keyframes authPop {
+  from { opacity:0; transform: scale(0.93) translateY(20px); }
+  to   { opacity:1; transform: scale(1)    translateY(0); }
+}
+
+.auth-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  width: 30px; height: 30px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--faint);
+  border-radius: 50%;
+  color: var(--muted);
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+  line-height: 1;
+}
+.auth-close:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+.auth-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.05em;
+  color: var(--red);
+  margin-bottom: 1.8rem;
+  display: block;
+}
+.auth-logo span { color: var(--white); }
+
+.auth-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.4rem;
+}
+.auth-subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+.auth-field {
+  margin-bottom: 1.1rem;
+}
+.auth-field label {
+  display: block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.auth-field input {
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--faint);
+  border-radius: var(--radius);
+  color: var(--white);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.92rem;
+  padding: 0.75rem 1rem;
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.auth-field input:focus {
+  border-color: var(--red);
+  background: rgba(255,255,255,0.08);
+}
+.auth-field input::placeholder { color: #555; }
+
+.auth-field-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+.auth-field-row label { margin-bottom: 0; }
+.auth-forgot {
+  font-size: 0.78rem;
+  color: var(--red);
+  text-decoration: none;
+  transition: color 0.2s;
+  font-weight: 500;
+}
+.auth-forgot:hover { color: #ff4d57; text-decoration: underline; }
+
+.auth-btn {
+  width: 100%;
+  background: var(--red);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0.85rem;
+  margin-top: 0.5rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  letter-spacing: 0.02em;
+}
+.auth-btn:hover { background: var(--red2); transform: translateY(-1px); }
+.auth-btn:active { transform: translateY(0); }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin: 1.5rem 0;
+  color: var(--faint);
+  font-size: 0.75rem;
+}
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--faint);
+}
+
+.auth-switch {
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 1.5rem;
+}
+.auth-switch a {
+  color: var(--white);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.auth-switch a:hover { color: var(--red); }
+
+.auth-terms {
+  font-size: 0.72rem;
+  color: #555;
+  text-align: center;
+  margin-top: 1.2rem;
+  line-height: 1.6;
+}
+.auth-terms a { color: var(--muted); text-decoration: underline; }
+
+.auth-success {
+  text-align: center;
+  padding: 1rem 0;
+}
+.auth-success-icon {
+  width: 56px; height: 56px;
+  background: rgba(229,9,20,0.1);
+  border: 2px solid var(--red);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 1.2rem;
+  font-size: 1.5rem;
+}
+.auth-success h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 0.5rem;
+}
+.auth-success p {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.password-wrap { position: relative; }
+.password-wrap input { padding-right: 3rem; }
+.toggle-pw {
+  position: absolute;
+  right: 0.8rem; top: 50%;
+  transform: translateY(-50%);
+  background: none; border: none;
+  color: var(--muted); cursor: pointer;
+  font-size: 0.8rem; letter-spacing: 0.05em;
+  transition: color 0.2s; padding: 0;
+}
+.toggle-pw:hover { color: var(--white); }
+
+.strength-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--faint);
+  margin-top: 0.5rem;
+  overflow: hidden;
+}
+.strength-fill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s, background 0.3s;
+  width: 0%;
+  background: var(--red);
+}
+.strength-label {
+  font-size: 0.7rem;
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+@media (max-width: 500px) {
+  .auth-box { padding: 2rem 1.5rem; }
+  .auth-title { font-size: 1.3rem; }
+}
+
+
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  20%{transform:translateX(-6px)}
+  40%{transform:translateX(6px)}
+  60%{transform:translateX(-4px)}
+  80%{transform:translateX(4px)}
+}
+
+</style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav id="navbar">
+  <div class="nav-left">
+    <a class="logo" href="#">Stream<span>Vault</span></a>
+    <ul>
+      <li><a href="#" class="active">Home</a></li>
+      <li><a href="#sec-action">Action</a></li>
+      <li><a href="#sec-drama">Drama</a></li>
+      <li><a href="#sec-scifi">Sci-Fi</a></li>
+      <li><a href="#sec-horror">Horror</a></li>
+      <li><a href="#sec-animation">Animation</a></li>
+    </ul>
+  </div>
+  <div class="nav-right">
+    <button class="nav-search" onclick="openSearch()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search movies...
+    </button>
+    <button class="btn-signin" onclick="openSignIn()">Sign In</button>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-badge">Featured Film</div>
+    <h1>The Dark<br><em>Knight</em></h1>
+    <div class="hero-meta">
+      <span class="hero-rating">★ 9.0</span>
+      <span>2008</span>
+      <span>2h 32m</span>
+      <span class="hero-genre-tag">Action</span>
+      <span class="hero-genre-tag">Crime</span>
+    </div>
+    <p>Batman battles the Joker, a criminal mastermind who plunges Gotham City into anarchy. Christopher Nolan&rsquo;s defining superhero film and one of cinema&rsquo;s greatest crime epics &mdash; a film that transcended the genre entirely.</p>
+    <div class="hero-actions">
+      <button class="btn-play" onclick="openHeroModal()">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+        Play Now
+      </button>
+      <button class="btn-more" onclick="openHeroModal()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        More Info
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ── GENRE NAV ── -->
+<div class="genre-nav">
+  <button class="genre-btn active" onclick="filterGenre('all',this)">All</button>
+  <button class="genre-btn" onclick="filterGenre('action',this)">Action</button>
+  <button class="genre-btn" onclick="filterGenre('drama',this)">Drama</button>
+  <button class="genre-btn" onclick="filterGenre('scifi',this)">Sci-Fi</button>
+  <button class="genre-btn" onclick="filterGenre('thriller',this)">Thriller</button>
+  <button class="genre-btn" onclick="filterGenre('horror',this)">Horror</button>
+  <button class="genre-btn" onclick="filterGenre('comedy',this)">Comedy</button>
+  <button class="genre-btn" onclick="filterGenre('romance',this)">Romance</button>
+  <button class="genre-btn" onclick="filterGenre('documentary',this)">Documentary</button>
+  <button class="genre-btn" onclick="filterGenre('animation',this)">Animation</button>
+  <button class="genre-btn" onclick="filterGenre('biopic',this)">Biographical</button>
+  <button class="genre-btn" onclick="filterGenre('western',this)">Western</button>
+  <button class="genre-btn" onclick="filterGenre('world',this)">World Cinema</button>
+</div>
+
+<!-- ── MOVIE SECTIONS ── -->
+<main id="main-content">
+
+<section class="movie-section" id="sec-trending">
+  <div class="section-head">
+    <h2 class="section-title">🔥 Trending Now</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Oppenheimer"
+  data-genre="Biography · Drama"
+  data-year="2023"
+  data-duration="3h 0m"
+  data-rating="★ 8.9"
+  data-desc="The story of J. Robert Oppenheimer&#39;s role in the development of the atomic bomb during World War II. Christopher Nolan&#39;s sweeping, morally complex epic won seven Academy Awards."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">OPPENHEIMER</div>
+    <span class="badge badge-new">NEW</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Oppenheimer</div>
+        <div class="hover-meta">2023 &bull; 3h 0m &bull; ★ 8.9</div>
+        <div class="hover-genre">Biography · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Dune: Part Two"
+  data-genre="Sci-Fi · Adventure"
+  data-year="2024"
+  data-duration="2h 46m"
+  data-rating="★ 8.8"
+  data-desc="Paul Atreides unites with Chani and the Fremen while on a warpath of revenge against the conspirators who destroyed his family. Denis Villeneuve&#39;s breathtaking conclusion to his Dune saga."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">DUNE: PART TWO</div>
+    <span class="badge badge-new">NEW</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Dune: Part Two</div>
+        <div class="hover-meta">2024 &bull; 2h 46m &bull; ★ 8.8</div>
+        <div class="hover-genre">Sci-Fi · Adventure</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Dark Knight"
+  data-genre="Action · Crime"
+  data-year="2008"
+  data-duration="2h 32m"
+  data-rating="★ 9.0"
+  data-desc="Batman battles the Joker, a criminal mastermind who plunges Gotham into anarchy. Christopher Nolan&#39;s defining superhero film and one of cinema&#39;s greatest crime epics."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">THE DARK KNIGHT</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Dark Knight</div>
+        <div class="hover-meta">2008 &bull; 2h 32m &bull; ★ 9.0</div>
+        <div class="hover-genre">Action · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Top Gun: Maverick"
+  data-genre="Action · Drama"
+  data-year="2022"
+  data-duration="2h 10m"
+  data-rating="★ 8.3"
+  data-desc="After more than thirty years of service, Pete Mitchell pushes limits as a test pilot while confronting ghosts of his past. A rare sequel that surpasses the original."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">TOP GUN: MAVERICK</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Top Gun: Maverick</div>
+        <div class="hover-meta">2022 &bull; 2h 10m &bull; ★ 8.3</div>
+        <div class="hover-genre">Action · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Gladiator"
+  data-genre="Action · Epic"
+  data-year="2000"
+  data-duration="2h 35m"
+  data-rating="★ 8.5"
+  data-desc="A Roman general is betrayed and his family murdered. He rises as a gladiator to seek revenge against the corrupt emperor. Ridley Scott&#39;s rousing, Oscar-winning epic."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">GLADIATOR</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Gladiator</div>
+        <div class="hover-meta">2000 &bull; 2h 35m &bull; ★ 8.5</div>
+        <div class="hover-genre">Action · Epic</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Everything Everywhere All at Once"
+  data-genre="Action · Sci-Fi"
+  data-year="2022"
+  data-duration="2h 19m"
+  data-rating="★ 7.8"
+  data-desc="A middle-aged Chinese-American laundromat owner must connect with parallel universe versions of herself to prevent a powerful villain from destroying existence."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">EVERYTHING EVERYWHERE </div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Everything Everywhere All at Once</div>
+        <div class="hover-meta">2022 &bull; 2h 19m &bull; ★ 7.8</div>
+        <div class="hover-genre">Action · Sci-Fi</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Shawshank Redemption"
+  data-genre="Drama"
+  data-year="1994"
+  data-duration="2h 22m"
+  data-rating="★ 9.3"
+  data-desc="Two imprisoned men bond over years, finding solace and eventual redemption. Frank Darabont&#39;s adaptation of Stephen King&#39;s novella remains the highest-rated film on IMDb."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">THE SHAWSHANK REDEMPTI</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Shawshank Redemption</div>
+        <div class="hover-meta">1994 &bull; 2h 22m &bull; ★ 9.3</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Schindler&#39;s List"
+  data-genre="Drama · History"
+  data-year="1993"
+  data-duration="3h 15m"
+  data-rating="★ 8.9"
+  data-desc="The true story of Oskar Schindler, who saved over a thousand mostly Polish-Jewish refugees during the Holocaust. Spielberg&#39;s most important and devastating film."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">SCHINDLER'S LIST</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Schindler's List</div>
+        <div class="hover-meta">1993 &bull; 3h 15m &bull; ★ 8.9</div>
+        <div class="hover-genre">Drama · History</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Parasite"
+  data-genre="Drama · Thriller"
+  data-year="2019"
+  data-duration="2h 12m"
+  data-rating="★ 8.5"
+  data-desc="A poor family schemes to become employed by a wealthy family, with unexpected and explosive consequences. Bong Joon-ho&#39;s Palme d&#39;Or and Oscar-winning genre-defying masterpiece."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">PARASITE</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Parasite</div>
+        <div class="hover-meta">2019 &bull; 2h 12m &bull; ★ 8.5</div>
+        <div class="hover-genre">Drama · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Interstellar"
+  data-genre="Sci-Fi · Drama"
+  data-year="2014"
+  data-duration="2h 49m"
+  data-rating="★ 8.7"
+  data-desc="A team of explorers travel through a wormhole in space in an attempt to ensure humanity&#39;s survival. Christopher Nolan&#39;s grandest and most emotionally resonant film."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">INTERSTELLAR</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Interstellar</div>
+        <div class="hover-meta">2014 &bull; 2h 49m &bull; ★ 8.7</div>
+        <div class="hover-genre">Sci-Fi · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Matrix"
+  data-genre="Sci-Fi · Action"
+  data-year="1999"
+  data-duration="2h 16m"
+  data-rating="★ 8.7"
+  data-desc="A computer hacker learns the world he lives in is a simulated reality created by machines. The Wachowskis&#39; groundbreaking film that redefined visual effects and storytelling."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE MATRIX</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Matrix</div>
+        <div class="hover-meta">1999 &bull; 2h 16m &bull; ★ 8.7</div>
+        <div class="hover-genre">Sci-Fi · Action</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Inception"
+  data-genre="Sci-Fi · Thriller"
+  data-year="2010"
+  data-duration="2h 28m"
+  data-rating="★ 8.8"
+  data-desc="A thief who steals corporate secrets through dream-sharing technology is given the inverse task of planting an idea into the mind of a CEO. Nolan&#39;s dazzling puzzle-box thriller."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">INCEPTION</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Inception</div>
+        <div class="hover-meta">2010 &bull; 2h 28m &bull; ★ 8.8</div>
+        <div class="hover-genre">Sci-Fi · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Spirited Away"
+  data-genre="Animation · Fantasy"
+  data-year="2001"
+  data-duration="2h 4m"
+  data-rating="★ 8.6"
+  data-desc="During her family&#39;s move to the suburbs, a sulky 10-year-old girl wanders into a world ruled by gods, witches, and spirits. Studio Ghibli&#39;s greatest and most magical work."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">SPIRITED AWAY</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Spirited Away</div>
+        <div class="hover-meta">2001 &bull; 2h 4m &bull; ★ 8.6</div>
+        <div class="hover-genre">Animation · Fantasy</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-new">
+  <div class="section-head">
+    <h2 class="section-title">✨ New Releases</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Past Lives"
+  data-genre="Romance · Drama"
+  data-year="2023"
+  data-duration="1h 46m"
+  data-rating="★ 7.9"
+  data-desc="Two childhood sweethearts are reunited in New York City after 20 years apart, forced to reckon with destiny, love, and the lives they chose. Celine Song&#39;s luminous debut feature."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">PAST LIVES</div>
+    <span class="badge badge-new">NEW</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Past Lives</div>
+        <div class="hover-meta">2023 &bull; 1h 46m &bull; ★ 7.9</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Poor Things"
+  data-genre="Comedy · Drama"
+  data-year="2023"
+  data-duration="2h 21m"
+  data-rating="★ 7.9"
+  data-desc="The incredible tale of Bella Baxter, a young woman brought back to life by the brilliant and unorthodox scientist Dr. Godwin Baxter. Yorgos Lanthimos&#39;s Golden Lion-winning surrealist odyssey."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">POOR THINGS</div>
+    <span class="badge badge-new">NEW</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Poor Things</div>
+        <div class="hover-meta">2023 &bull; 2h 21m &bull; ★ 7.9</div>
+        <div class="hover-genre">Comedy · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Fabelmans"
+  data-genre="Drama"
+  data-year="2022"
+  data-duration="2h 31m"
+  data-rating="★ 7.6"
+  data-desc="A semi-autobiographical coming-of-age story following a young aspiring filmmaker growing up in post-WWII America. Spielberg&#39;s most personal and moving film."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">THE FABELMANS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Fabelmans</div>
+        <div class="hover-meta">2022 &bull; 2h 31m &bull; ★ 7.6</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Tár"
+  data-genre="Drama · Music"
+  data-year="2022"
+  data-duration="2h 38m"
+  data-rating="★ 7.5"
+  data-desc="The rise and fall of a world-renowned conductor at the height of her international career. Todd Field&#39;s mesmerizing character study with a career-defining Cate Blanchett performance."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">TÁR</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Tár</div>
+        <div class="hover-meta">2022 &bull; 2h 38m &bull; ★ 7.5</div>
+        <div class="hover-genre">Drama · Music</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Barbie"
+  data-genre="Comedy · Fantasy"
+  data-year="2023"
+  data-duration="1h 54m"
+  data-rating="★ 6.9"
+  data-desc="Barbie and Ken go on a journey of self-discovery into the real world and back again. Greta Gerwig&#39;s inventive, visually dazzling meditation on identity and expectation."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">BARBIE</div>
+    <span class="badge badge-new">NEW</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Barbie</div>
+        <div class="hover-meta">2023 &bull; 1h 54m &bull; ★ 6.9</div>
+        <div class="hover-genre">Comedy · Fantasy</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-action">
+  <div class="section-head">
+    <h2 class="section-title">💥 Action & Adventure</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Mad Max: Fury Road"
+  data-genre="Action · Adventure"
+  data-year="2015"
+  data-duration="2h 0m"
+  data-rating="★ 8.1"
+  data-desc="In a post-apocalyptic wasteland, Max teams with Furiosa to flee from a tyrannical warlord. George Miller&#39;s relentless, visually overwhelming masterwork of practical effects."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">MAD MAX: FURY ROAD</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Mad Max: Fury Road</div>
+        <div class="hover-meta">2015 &bull; 2h 0m &bull; ★ 8.1</div>
+        <div class="hover-genre">Action · Adventure</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="John Wick"
+  data-genre="Action · Thriller"
+  data-year="2014"
+  data-duration="1h 41m"
+  data-rating="★ 7.4"
+  data-desc="An ex-hitman comes out of retirement to track down the gangsters who killed his dog. The film that redefined action choreography and launched a powerhouse franchise."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">JOHN WICK</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">John Wick</div>
+        <div class="hover-meta">2014 &bull; 1h 41m &bull; ★ 7.4</div>
+        <div class="hover-genre">Action · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Mission: Impossible – Fallout"
+  data-genre="Action · Spy"
+  data-year="2018"
+  data-duration="2h 27m"
+  data-rating="★ 7.7"
+  data-desc="Ethan Hunt races against time after a mission gone wrong. The gold standard of modern blockbuster filmmaking, featuring jaw-dropping practical stunt work."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">MISSION: IMPOSSIBLE – </div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Mission: Impossible – Fallout</div>
+        <div class="hover-meta">2018 &bull; 2h 27m &bull; ★ 7.7</div>
+        <div class="hover-genre">Action · Spy</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Heat"
+  data-genre="Action · Crime"
+  data-year="1995"
+  data-duration="2h 50m"
+  data-rating="★ 8.3"
+  data-desc="A master thief and a veteran detective play cat and mouse across Los Angeles. Michael Mann&#39;s immaculate crime film featuring the greatest restaurant scene in cinema."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">HEAT</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Heat</div>
+        <div class="hover-meta">1995 &bull; 2h 50m &bull; ★ 8.3</div>
+        <div class="hover-genre">Action · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Die Hard"
+  data-genre="Action · Thriller"
+  data-year="1988"
+  data-duration="2h 12m"
+  data-rating="★ 8.2"
+  data-desc="A New York cop battles terrorists who have seized a skyscraper on Christmas Eve. The blueprint for every modern action movie, and still the best of its kind."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">DIE HARD</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Die Hard</div>
+        <div class="hover-meta">1988 &bull; 2h 12m &bull; ★ 8.2</div>
+        <div class="hover-genre">Action · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Raid"
+  data-genre="Action · Martial Arts"
+  data-year="2011"
+  data-duration="1h 41m"
+  data-rating="★ 7.6"
+  data-desc="A SWAT team becomes trapped in a tenement building controlled by a ruthless gangster. The most viscerally exciting action film of the 21st century."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">THE RAID</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Raid</div>
+        <div class="hover-meta">2011 &bull; 1h 41m &bull; ★ 7.6</div>
+        <div class="hover-genre">Action · Martial Arts</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Black Hawk Down"
+  data-genre="Action · War"
+  data-year="2001"
+  data-duration="2h 24m"
+  data-rating="★ 7.7"
+  data-desc="The 1993 Battle of Mogadishu comes to harrowing life as elite U.S. soldiers are cut off behind enemy lines. Ridley Scott&#39;s immersive, unflinching war film."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">BLACK HAWK DOWN</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Black Hawk Down</div>
+        <div class="hover-meta">2001 &bull; 2h 24m &bull; ★ 7.7</div>
+        <div class="hover-genre">Action · War</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Avengers: Endgame"
+  data-genre="Action · Sci-Fi"
+  data-year="2019"
+  data-duration="3h 1m"
+  data-rating="★ 8.4"
+  data-desc="The surviving Avengers assemble one last time to undo Thanos&#39;s actions and restore order to the universe. The culmination of a decade of Marvel storytelling."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">AVENGERS: ENDGAME</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Avengers: Endgame</div>
+        <div class="hover-meta">2019 &bull; 3h 1m &bull; ★ 8.4</div>
+        <div class="hover-genre">Action · Sci-Fi</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Pianist"
+  data-genre="Drama · War"
+  data-year="2002"
+  data-duration="2h 30m"
+  data-rating="★ 8.5"
+  data-desc="A Polish Jewish musician struggles to survive the destruction of the Warsaw ghetto during World War II. Roman Polanski&#39;s deeply personal and harrowing masterwork."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">THE PIANIST</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Pianist</div>
+        <div class="hover-meta">2002 &bull; 2h 30m &bull; ★ 8.5</div>
+        <div class="hover-genre">Drama · War</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="District 9"
+  data-genre="Sci-Fi · Action"
+  data-year="2009"
+  data-duration="1h 52m"
+  data-rating="★ 7.9"
+  data-desc="An extraterrestrial race forced to live in slum-like conditions on Earth finds a kindred spirit in a government agent. Neill Blomkamp&#39;s inventive, politically charged sci-fi debut."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">DISTRICT 9</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">District 9</div>
+        <div class="hover-meta">2009 &bull; 1h 52m &bull; ★ 7.9</div>
+        <div class="hover-genre">Sci-Fi · Action</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Grand Budapest Hotel"
+  data-genre="Comedy · Adventure"
+  data-year="2014"
+  data-duration="1h 39m"
+  data-rating="★ 8.1"
+  data-desc="The adventures of a legendary hotel concierge and his young protégé in the fictional European state of Zubrowka. Wes Anderson&#39;s most delirious and perfectly crafted film."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE GRAND BUDAPEST HOT</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Grand Budapest Hotel</div>
+        <div class="hover-meta">2014 &bull; 1h 39m &bull; ★ 8.1</div>
+        <div class="hover-genre">Comedy · Adventure</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Nice Guys"
+  data-genre="Comedy · Action"
+  data-year="2016"
+  data-duration="1h 56m"
+  data-rating="★ 7.4"
+  data-desc="A mismatched pair of private eyes investigate the apparent suicide of a fading pornographic actress in 1977 Los Angeles. Shane Black&#39;s brilliantly funny noir pastiche."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">THE NICE GUYS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Nice Guys</div>
+        <div class="hover-meta">2016 &bull; 1h 56m &bull; ★ 7.4</div>
+        <div class="hover-genre">Comedy · Action</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Spider-Man: Into the Spider-Verse"
+  data-genre="Animation · Action"
+  data-year="2018"
+  data-duration="1h 57m"
+  data-rating="★ 8.4"
+  data-desc="Teen Miles Morales becomes the Spider-Man of his universe and must team with five counterparts from other dimensions. The animation film that redefined what the medium could do."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">SPIDER-MAN: INTO THE S</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Spider-Man: Into the Spider-Verse</div>
+        <div class="hover-meta">2018 &bull; 1h 57m &bull; ★ 8.4</div>
+        <div class="hover-genre">Animation · Action</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Princess Mononoke"
+  data-genre="Animation · Adventure"
+  data-year="1997"
+  data-duration="2h 14m"
+  data-rating="★ 8.3"
+  data-desc="On a journey to find the cure for a Tatarigami&#39;s curse, a prince finds himself in the middle of a war between forest gods and a mining colony. Miyazaki&#39;s epic and complex fable."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">PRINCESS MONONOKE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Princess Mononoke</div>
+        <div class="hover-meta">1997 &bull; 2h 14m &bull; ★ 8.3</div>
+        <div class="hover-genre">Animation · Adventure</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Kubo and the Two Strings"
+  data-genre="Animation · Adventure"
+  data-year="2016"
+  data-duration="1h 41m"
+  data-rating="★ 7.7"
+  data-desc="A young boy named Kubo must locate a magical suit of armour worn by his late father in order to defeat a vengeful spirit. Laika&#39;s most breathtaking stop-motion achievement."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">KUBO AND THE TWO STRIN</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Kubo and the Two Strings</div>
+        <div class="hover-meta">2016 &bull; 1h 41m &bull; ★ 7.7</div>
+        <div class="hover-genre">Animation · Adventure</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Crouching Tiger, Hidden Dragon"
+  data-genre="Action · Romance"
+  data-year="2000"
+  data-duration="2h 0m"
+  data-rating="★ 7.8"
+  data-desc="Two warriors in pursuit of a stolen sword and a notorious fugitive are led to an unlikely romance. Ang Lee&#39;s wuxia masterpiece remains the highest-grossing foreign language film in U.S. history."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">CROUCHING TIGER, HIDDE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Crouching Tiger, Hidden Dragon</div>
+        <div class="hover-meta">2000 &bull; 2h 0m &bull; ★ 7.8</div>
+        <div class="hover-genre">Action · Romance</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-drama">
+  <div class="section-head">
+    <h2 class="section-title">🎭 Drama</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Moonlight"
+  data-genre="Drama"
+  data-year="2016"
+  data-duration="1h 51m"
+  data-rating="★ 7.4"
+  data-desc="The life of a young Black man from childhood through adulthood as he struggles to find his place in the world while dealing with his sexuality. Barry Jenkins&#39; luminous triptych."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">MOONLIGHT</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Moonlight</div>
+        <div class="hover-meta">2016 &bull; 1h 51m &bull; ★ 7.4</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="12 Years a Slave"
+  data-genre="Drama · History"
+  data-year="2013"
+  data-duration="2h 14m"
+  data-rating="★ 8.1"
+  data-desc="The true story of Solomon Northup, a free Black man kidnapped and sold into slavery in 1841. Steve McQueen&#39;s devastating, Oscar-winning portrait of American horror."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">12 YEARS A SLAVE</div>
+    <span class="badge badge-award">AWARD</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">12 Years a Slave</div>
+        <div class="hover-meta">2013 &bull; 2h 14m &bull; ★ 8.1</div>
+        <div class="hover-genre">Drama · History</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Manchester by the Sea"
+  data-genre="Drama"
+  data-year="2016"
+  data-duration="2h 17m"
+  data-rating="★ 7.8"
+  data-desc="A Boston handyman returns to his hometown to care for his nephew after his brother dies. Kenneth Lonergan&#39;s quietly devastating study of grief and the limits of healing."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">MANCHESTER BY THE SEA</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Manchester by the Sea</div>
+        <div class="hover-meta">2016 &bull; 2h 17m &bull; ★ 7.8</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Nomadland"
+  data-genre="Drama"
+  data-year="2021"
+  data-duration="1h 47m"
+  data-rating="★ 7.3"
+  data-desc="A woman in her sixties embarks on a journey through the American West after losing everything during the economic collapse. Chloé Zhao&#39;s immersive, lyrical character study."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">NOMADLAND</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Nomadland</div>
+        <div class="hover-meta">2021 &bull; 1h 47m &bull; ★ 7.3</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Roma"
+  data-genre="Drama · History"
+  data-year="2018"
+  data-duration="2h 15m"
+  data-rating="★ 7.7"
+  data-desc="A year in the life of a middle-class family in Mexico City in the early 1970s, seen through the eyes of their live-in maid. Alfonso Cuarón&#39;s achingly beautiful personal memoir."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">ROMA</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Roma</div>
+        <div class="hover-meta">2018 &bull; 2h 15m &bull; ★ 7.7</div>
+        <div class="hover-genre">Drama · History</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Wild Strawberries"
+  data-genre="Drama"
+  data-year="1957"
+  data-duration="1h 31m"
+  data-rating="★ 8.1"
+  data-desc="An aging professor reflects on his life and confronts his regrets while traveling to accept an honorary degree. Ingmar Bergman&#39;s most accessible and deeply humane masterwork."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">WILD STRAWBERRIES</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Wild Strawberries</div>
+        <div class="hover-meta">1957 &bull; 1h 31m &bull; ★ 8.1</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Pan&#39;s Labyrinth"
+  data-genre="Fantasy · Drama"
+  data-year="2006"
+  data-duration="1h 58m"
+  data-rating="★ 8.2"
+  data-desc="In post-Civil War Spain, a girl escapes into a labyrinth and discovers a faun who claims she is a princess. Guillermo del Toro&#39;s dark, ravishing fairy tale for adults."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">PAN'S LABYRINTH</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Pan's Labyrinth</div>
+        <div class="hover-meta">2006 &bull; 1h 58m &bull; ★ 8.2</div>
+        <div class="hover-genre">Fantasy · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Capernaum"
+  data-genre="Drama"
+  data-year="2018"
+  data-duration="2h 6m"
+  data-rating="★ 8.4"
+  data-desc="A young boy sues his parents for bringing him into such a harsh world, while a Lebanese director takes stock of what causes children to suffer. Nadine Labaki&#39;s fierce debut."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">CAPERNAUM</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Capernaum</div>
+        <div class="hover-meta">2018 &bull; 2h 6m &bull; ★ 8.4</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Bicycle Thieves"
+  data-genre="Drama"
+  data-year="1948"
+  data-duration="1h 29m"
+  data-rating="★ 8.3"
+  data-desc="In post-World War II Rome, a poor man&#39;s bicycle is stolen. The essential Italian neo-realist film and one of the most emotionally direct films ever made."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">BICYCLE THIEVES</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Bicycle Thieves</div>
+        <div class="hover-meta">1948 &bull; 1h 29m &bull; ★ 8.3</div>
+        <div class="hover-genre">Drama</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-scifi">
+  <div class="section-head">
+    <h2 class="section-title">🚀 Sci-Fi & Speculative</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Arrival"
+  data-genre="Sci-Fi · Drama"
+  data-year="2016"
+  data-duration="1h 56m"
+  data-rating="★ 7.9"
+  data-desc="A linguist works with the military to communicate with alien lifeforms after twelve mysterious spacecraft appear around the world. Denis Villeneuve&#39;s cerebral, heartbreaking sci-fi."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">ARRIVAL</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Arrival</div>
+        <div class="hover-meta">2016 &bull; 1h 56m &bull; ★ 7.9</div>
+        <div class="hover-genre">Sci-Fi · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Ex Machina"
+  data-genre="Sci-Fi · Thriller"
+  data-year="2014"
+  data-duration="1h 48m"
+  data-rating="★ 7.7"
+  data-desc="A young programmer is selected to administer the Turing test to an AI with a strikingly human presence. Alex Garland&#39;s claustrophobic, unsettling debut feature."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">EX MACHINA</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Ex Machina</div>
+        <div class="hover-meta">2014 &bull; 1h 48m &bull; ★ 7.7</div>
+        <div class="hover-genre">Sci-Fi · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Annihilation"
+  data-genre="Sci-Fi · Horror"
+  data-year="2018"
+  data-duration="1h 55m"
+  data-rating="★ 6.8"
+  data-desc="A biologist signs up for a dangerous, secret expedition into a mysterious zone where the laws of nature don&#39;t apply. Alex Garland&#39;s haunting, deeply strange masterwork."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">ANNIHILATION</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Annihilation</div>
+        <div class="hover-meta">2018 &bull; 1h 55m &bull; ★ 6.8</div>
+        <div class="hover-genre">Sci-Fi · Horror</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Moon"
+  data-genre="Sci-Fi · Drama"
+  data-year="2009"
+  data-duration="1h 37m"
+  data-rating="★ 7.9"
+  data-desc="An astronaut nearing the end of a three-year stint on the Moon begins to question everything. Duncan Jones&#39; intimate, meditative debut is one of sci-fi&#39;s hidden gems."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">MOON</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Moon</div>
+        <div class="hover-meta">2009 &bull; 1h 37m &bull; ★ 7.9</div>
+        <div class="hover-genre">Sci-Fi · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Children of Men"
+  data-genre="Sci-Fi · Thriller"
+  data-year="2006"
+  data-duration="1h 49m"
+  data-rating="★ 7.9"
+  data-desc="In a dystopian future where humanity has become infertile, a former activist must escort a miraculously pregnant woman to safety. Alfonso Cuarón&#39;s urgent, unbroken masterpiece."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">CHILDREN OF MEN</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Children of Men</div>
+        <div class="hover-meta">2006 &bull; 1h 49m &bull; ★ 7.9</div>
+        <div class="hover-genre">Sci-Fi · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Gravity"
+  data-genre="Sci-Fi · Thriller"
+  data-year="2013"
+  data-duration="1h 31m"
+  data-rating="★ 7.7"
+  data-desc="Two astronauts work together to survive after an accident leaves them adrift in space. Alfonso Cuarón&#39;s technical marvel is one of the most viscerally immersive films ever made."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">GRAVITY</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Gravity</div>
+        <div class="hover-meta">2013 &bull; 1h 31m &bull; ★ 7.7</div>
+        <div class="hover-genre">Sci-Fi · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Contact"
+  data-genre="Sci-Fi · Drama"
+  data-year="1997"
+  data-duration="2h 30m"
+  data-rating="★ 7.5"
+  data-desc="A scientist discovers a signal from extraterrestrials and fights to be the one to make first contact. Robert Zemeckis&#39;s thoughtful, deeply human exploration of faith and science."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">CONTACT</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Contact</div>
+        <div class="hover-meta">1997 &bull; 2h 30m &bull; ★ 7.5</div>
+        <div class="hover-genre">Sci-Fi · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Alien"
+  data-genre="Sci-Fi · Horror"
+  data-year="1979"
+  data-duration="1h 57m"
+  data-rating="★ 8.5"
+  data-desc="After a space merchant vessel receives an unknown transmission, the crew discovers a deadly creature aboard. Ridley Scott&#39;s landmark that defined the sci-fi horror genre."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">ALIEN</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Alien</div>
+        <div class="hover-meta">1979 &bull; 1h 57m &bull; ★ 8.5</div>
+        <div class="hover-genre">Sci-Fi · Horror</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="A Quiet Place"
+  data-genre="Horror · Sci-Fi"
+  data-year="2018"
+  data-duration="1h 30m"
+  data-rating="★ 7.5"
+  data-desc="A family struggles to survive in a post-apocalyptic world inhabited by blind monsters with an acute sense of hearing. John Krasinski&#39;s taut, inventive genre film."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">A QUIET PLACE</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">A Quiet Place</div>
+        <div class="hover-meta">2018 &bull; 1h 30m &bull; ★ 7.5</div>
+        <div class="hover-genre">Horror · Sci-Fi</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Eternal Sunshine of the Spotless Mind"
+  data-genre="Romance · Sci-Fi"
+  data-year="2004"
+  data-duration="1h 48m"
+  data-rating="★ 8.3"
+  data-desc="A couple undergoes a procedure to erase each other from their memories after a painful break-up. Michel Gondry&#39;s inventive, heartbreaking love story written by Charlie Kaufman."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">ETERNAL SUNSHINE OF TH</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Eternal Sunshine of the Spotless Mind</div>
+        <div class="hover-meta">2004 &bull; 1h 48m &bull; ★ 8.3</div>
+        <div class="hover-genre">Romance · Sci-Fi</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="WALL-E"
+  data-genre="Animation · Sci-Fi"
+  data-year="2008"
+  data-duration="1h 38m"
+  data-rating="★ 8.4"
+  data-desc="A small waste-collecting robot inadvertently embarks on a space journey that will ultimately decide the fate of mankind. Pixar&#39;s most beautiful and emotionally devastating film."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">WALL-E</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">WALL-E</div>
+        <div class="hover-meta">2008 &bull; 1h 38m &bull; ★ 8.4</div>
+        <div class="hover-genre">Animation · Sci-Fi</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-thriller">
+  <div class="section-head">
+    <h2 class="section-title">🔪 Thriller & Crime</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Prisoners"
+  data-genre="Thriller · Crime"
+  data-year="2013"
+  data-duration="2h 33m"
+  data-rating="★ 8.1"
+  data-desc="When two girls go missing, a desperate father takes matters into his own hands while a detective works the case. Denis Villeneuve&#39;s suffocating, morally complex thriller."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">PRISONERS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Prisoners</div>
+        <div class="hover-meta">2013 &bull; 2h 33m &bull; ★ 8.1</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Gone Girl"
+  data-genre="Thriller · Mystery"
+  data-year="2014"
+  data-duration="2h 29m"
+  data-rating="★ 8.1"
+  data-desc="On the morning of his fifth wedding anniversary, a husband becomes the prime suspect in his wife&#39;s disappearance. David Fincher&#39;s razor-sharp, deeply unsettling film."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">GONE GIRL</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Gone Girl</div>
+        <div class="hover-meta">2014 &bull; 2h 29m &bull; ★ 8.1</div>
+        <div class="hover-genre">Thriller · Mystery</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Zodiac"
+  data-genre="Thriller · Crime"
+  data-year="2007"
+  data-duration="2h 37m"
+  data-rating="★ 7.7"
+  data-desc="A cartoonist becomes obsessed with tracking down the Zodiac Killer while investigators find themselves at dead ends. David Fincher&#39;s meticulous, hypnotic procedural."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">ZODIAC</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Zodiac</div>
+        <div class="hover-meta">2007 &bull; 2h 37m &bull; ★ 7.7</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="No Country for Old Men"
+  data-genre="Thriller · Crime"
+  data-year="2007"
+  data-duration="2h 2m"
+  data-rating="★ 8.1"
+  data-desc="A hunter stumbles upon a drug deal gone wrong and takes the money, setting a relentless killer on his trail. The Coen Brothers&#39; spare, terrifying masterwork."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">NO COUNTRY FOR OLD MEN</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">No Country for Old Men</div>
+        <div class="hover-meta">2007 &bull; 2h 2m &bull; ★ 8.1</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Sicario"
+  data-genre="Thriller · Crime"
+  data-year="2015"
+  data-duration="2h 1m"
+  data-rating="★ 7.6"
+  data-desc="An idealistic FBI agent is enlisted by a government task force to aid in the fight against drugs at the U.S.-Mexico border. Villeneuve&#39;s morally devastating thriller."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">SICARIO</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Sicario</div>
+        <div class="hover-meta">2015 &bull; 2h 1m &bull; ★ 7.6</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Se7en"
+  data-genre="Thriller · Crime"
+  data-year="1995"
+  data-duration="2h 7m"
+  data-rating="★ 8.6"
+  data-desc="Two detectives hunt a serial killer who uses the seven deadly sins as motifs. David Fincher&#39;s darkest, most unrelenting film — one of the great crime thrillers."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">SE7EN</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Se7en</div>
+        <div class="hover-meta">1995 &bull; 2h 7m &bull; ★ 8.6</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Silence of the Lambs"
+  data-genre="Thriller · Horror"
+  data-year="1991"
+  data-duration="1h 58m"
+  data-rating="★ 8.6"
+  data-desc="A young FBI cadet must receive the help of an incarcerated cannibalistic serial killer to catch another serial killer. One of only three films to sweep the Big Five Oscars."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE SILENCE OF THE LAM</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Silence of the Lambs</div>
+        <div class="hover-meta">1991 &bull; 1h 58m &bull; ★ 8.6</div>
+        <div class="hover-genre">Thriller · Horror</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Knives Out"
+  data-genre="Thriller · Mystery"
+  data-year="2019"
+  data-duration="2h 10m"
+  data-rating="★ 7.9"
+  data-desc="A detective investigates the death of a patriarch of an eccentric, combative family. Rian Johnson&#39;s witty, brilliantly plotted modern whodunit."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">KNIVES OUT</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Knives Out</div>
+        <div class="hover-meta">2019 &bull; 2h 10m &bull; ★ 7.9</div>
+        <div class="hover-genre">Thriller · Mystery</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Nightcrawler"
+  data-genre="Thriller · Crime"
+  data-year="2014"
+  data-duration="1h 57m"
+  data-rating="★ 7.8"
+  data-desc="A driven young man discovers the world of crime journalism in Los Angeles and blurs the line between observer and participant. Jake Gyllenhaal&#39;s career-best performance."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">NIGHTCRAWLER</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Nightcrawler</div>
+        <div class="hover-meta">2014 &bull; 1h 57m &bull; ★ 7.8</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Drive"
+  data-genre="Thriller · Crime"
+  data-year="2011"
+  data-duration="1h 40m"
+  data-rating="★ 7.8"
+  data-desc="A Hollywood stuntman moonlights as a getaway driver and falls in love with his neighbor, whose husband&#39;s shady dealings put them all in danger. Nicolas Winding Refn&#39;s neon noir."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">DRIVE</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Drive</div>
+        <div class="hover-meta">2011 &bull; 1h 40m &bull; ★ 7.8</div>
+        <div class="hover-genre">Thriller · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Oldboy"
+  data-genre="Thriller · Mystery"
+  data-year="2003"
+  data-duration="2h 0m"
+  data-rating="★ 8.4"
+  data-desc="An ordinary man is imprisoned for 15 years without explanation, then released and given five days to find his captor. Park Chan-wook&#39;s shocking, operatic revenge thriller."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">OLDBOY</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Oldboy</div>
+        <div class="hover-meta">2003 &bull; 2h 0m &bull; ★ 8.4</div>
+        <div class="hover-genre">Thriller · Mystery</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Memento"
+  data-genre="Thriller · Mystery"
+  data-year="2000"
+  data-duration="1h 53m"
+  data-rating="★ 8.4"
+  data-desc="A man with short-term memory loss attempts to track down his wife&#39;s murderer. Christopher Nolan&#39;s ingeniously structured puzzle film that launched his career."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">MEMENTO</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Memento</div>
+        <div class="hover-meta">2000 &bull; 1h 53m &bull; ★ 8.4</div>
+        <div class="hover-genre">Thriller · Mystery</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Get Out"
+  data-genre="Horror · Thriller"
+  data-year="2017"
+  data-duration="1h 44m"
+  data-rating="★ 7.7"
+  data-desc="A Black man visits his white girlfriend&#39;s family estate and uncovers a disturbing secret. Jordan Peele&#39;s debut is a precise, frightening, and politically charged masterwork."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">GET OUT</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Get Out</div>
+        <div class="hover-meta">2017 &bull; 1h 44m &bull; ★ 7.7</div>
+        <div class="hover-genre">Horror · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Us"
+  data-genre="Horror · Thriller"
+  data-year="2019"
+  data-duration="1h 56m"
+  data-rating="★ 6.8"
+  data-desc="A family&#39;s beach vacation turns horrifying when doppelgangers of themselves appear and attack. Jordan Peele&#39;s audacious follow-up to Get Out, rich with symbolism."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">US</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Us</div>
+        <div class="hover-meta">2019 &bull; 1h 56m &bull; ★ 6.8</div>
+        <div class="hover-genre">Horror · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Game Night"
+  data-genre="Comedy · Thriller"
+  data-year="2018"
+  data-duration="1h 40m"
+  data-rating="★ 7.0"
+  data-desc="A group of friends who meet weekly for game night find themselves entangled in a real-life mystery. A genuinely clever, stylishly shot comedy that earns its twists."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">GAME NIGHT</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Game Night</div>
+        <div class="hover-meta">2018 &bull; 1h 40m &bull; ★ 7.0</div>
+        <div class="hover-genre">Comedy · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Knives Out 2: Glass Onion"
+  data-genre="Comedy · Mystery"
+  data-year="2022"
+  data-duration="2h 19m"
+  data-rating="★ 7.1"
+  data-desc="Detective Benoit Blanc travels to Greece for a distinctly 21st century murder mystery among tech billionaires. Rian Johnson&#39;s sharp, energetic follow-up to the original."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">KNIVES OUT 2: GLASS ON</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Knives Out 2: Glass Onion</div>
+        <div class="hover-meta">2022 &bull; 2h 19m &bull; ★ 7.1</div>
+        <div class="hover-genre">Comedy · Mystery</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="A Separation"
+  data-genre="Drama · Thriller"
+  data-year="2011"
+  data-duration="2h 3m"
+  data-rating="★ 8.3"
+  data-desc="A married couple faces a conflict between one wanting to move abroad and the other refusing to leave Iran due to a care obligation for her father. Asghar Farhadi&#39;s moral precision cinema."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">A SEPARATION</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">A Separation</div>
+        <div class="hover-meta">2011 &bull; 2h 3m &bull; ★ 8.3</div>
+        <div class="hover-genre">Drama · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Breathless"
+  data-genre="Crime · Romance"
+  data-year="1960"
+  data-duration="1h 27m"
+  data-rating="★ 7.8"
+  data-desc="A small-time thief steals a car and impulsively kills a motorcycle policeman, then tries to persuade his American girlfriend to flee to Italy with him. The film that launched the French New Wave."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">BREATHLESS</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Breathless</div>
+        <div class="hover-meta">1960 &bull; 1h 27m &bull; ★ 7.8</div>
+        <div class="hover-genre">Crime · Romance</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Shoplifters"
+  data-genre="Drama · Crime"
+  data-year="2018"
+  data-duration="2h 1m"
+  data-rating="★ 7.9"
+  data-desc="A family on the margins of society takes in a young girl they find shivering in the cold, only to discover secrets that upend their world. Kore-eda&#39;s tender Palme d&#39;Or winner."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">SHOPLIFTERS</div>
+    <span class="badge badge-award">AWARD</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Shoplifters</div>
+        <div class="hover-meta">2018 &bull; 2h 1m &bull; ★ 7.9</div>
+        <div class="hover-genre">Drama · Crime</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Lives of Others"
+  data-genre="Drama · Thriller"
+  data-year="2006"
+  data-duration="2h 17m"
+  data-rating="★ 8.4"
+  data-desc="In 1984 East Germany, an agent of the secret police conducts surveillance on a writer and his lover, and begins to question his mission. The Oscar-winning German language masterwork."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">THE LIVES OF OTHERS</div>
+    <span class="badge badge-award">AWARD</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Lives of Others</div>
+        <div class="hover-meta">2006 &bull; 2h 17m &bull; ★ 8.4</div>
+        <div class="hover-genre">Drama · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Rear Window"
+  data-genre="Mystery · Thriller"
+  data-year="1954"
+  data-duration="1h 52m"
+  data-rating="★ 8.5"
+  data-desc="A photographer with a broken leg suspects his neighbour of murder while watching from his apartment window. Alfred Hitchcock&#39;s most perfectly constructed suspense film."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">REAR WINDOW</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Rear Window</div>
+        <div class="hover-meta">1954 &bull; 1h 52m &bull; ★ 8.5</div>
+        <div class="hover-genre">Mystery · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Vertigo"
+  data-genre="Mystery · Thriller"
+  data-year="1958"
+  data-duration="2h 8m"
+  data-rating="★ 8.3"
+  data-desc="A former police detective with acrophobia is hired as a private investigator and becomes obsessed with a mysterious woman. Often called the greatest film ever made."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">VERTIGO</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Vertigo</div>
+        <div class="hover-meta">1958 &bull; 2h 8m &bull; ★ 8.3</div>
+        <div class="hover-genre">Mystery · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Prestige"
+  data-genre="Mystery · Drama"
+  data-year="2006"
+  data-duration="2h 10m"
+  data-rating="★ 8.5"
+  data-desc="Two stage magicians engage in a deadly rivalry to create the ultimate illusion. Christopher Nolan&#39;s most elegant and satisfying mystery — best experienced cold."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">THE PRESTIGE</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Prestige</div>
+        <div class="hover-meta">2006 &bull; 2h 10m &bull; ★ 8.5</div>
+        <div class="hover-genre">Mystery · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Shutter Island"
+  data-genre="Mystery · Thriller"
+  data-year="2010"
+  data-duration="2h 18m"
+  data-rating="★ 8.1"
+  data-desc="In 1954, a U.S. Marshal investigates the disappearance of a murderer who escaped from a facility for the criminally insane. Scorsese&#39;s operatic, deeply committed genre exercise."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">SHUTTER ISLAND</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Shutter Island</div>
+        <div class="hover-meta">2010 &bull; 2h 18m &bull; ★ 8.1</div>
+        <div class="hover-genre">Mystery · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Sixth Sense"
+  data-genre="Mystery · Thriller"
+  data-year="1999"
+  data-duration="1h 47m"
+  data-rating="★ 8.1"
+  data-desc="A child psychologist begins treating a troubled boy who claims he can see and talk to the dead. M. Night Shyamalan&#39;s most perfectly crafted and beloved mystery film."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE SIXTH SENSE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Sixth Sense</div>
+        <div class="hover-meta">1999 &bull; 1h 47m &bull; ★ 8.1</div>
+        <div class="hover-genre">Mystery · Thriller</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Clue"
+  data-genre="Mystery · Comedy"
+  data-year="1985"
+  data-duration="1h 34m"
+  data-rating="★ 7.3"
+  data-desc="Six guests are invited to a strange house and must cooperate to solve a murder mystery. The cult classic based on the board game, featuring multiple outrageous endings."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">CLUE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Clue</div>
+        <div class="hover-meta">1985 &bull; 1h 34m &bull; ★ 7.3</div>
+        <div class="hover-genre">Mystery · Comedy</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-horror">
+  <div class="section-head">
+    <h2 class="section-title">👁 Horror</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Hereditary"
+  data-genre="Horror"
+  data-year="2018"
+  data-duration="2h 7m"
+  data-rating="★ 7.3"
+  data-desc="After the family matriarch passes away, a grieving family is haunted by dark secrets. Ari Aster&#39;s debut is a slow-burning descent into absolute grief and terror."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">HEREDITARY</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Hereditary</div>
+        <div class="hover-meta">2018 &bull; 2h 7m &bull; ★ 7.3</div>
+        <div class="hover-genre">Horror</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Shining"
+  data-genre="Horror"
+  data-year="1980"
+  data-duration="2h 26m"
+  data-rating="★ 8.4"
+  data-desc="A family heads to an isolated hotel for the winter where a sinister presence influences the father into violence. Kubrick&#39;s baroque, endlessly layered horror masterpiece."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE SHINING</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Shining</div>
+        <div class="hover-meta">1980 &bull; 2h 26m &bull; ★ 8.4</div>
+        <div class="hover-genre">Horror</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Midsommar"
+  data-genre="Horror · Drama"
+  data-year="2019"
+  data-duration="2h 28m"
+  data-rating="★ 7.1"
+  data-desc="A couple travels to Sweden for a midsummer festival that devolves into pagan nightmare. Ari Aster&#39;s sunlit folk horror is as beautiful as it is deeply disturbing."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">MIDSOMMAR</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Midsommar</div>
+        <div class="hover-meta">2019 &bull; 2h 28m &bull; ★ 7.1</div>
+        <div class="hover-genre">Horror · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Witch"
+  data-genre="Horror · Drama"
+  data-year="2015"
+  data-duration="1h 32m"
+  data-rating="★ 6.9"
+  data-desc="A Puritan family encounters forces of evil in the New England wilderness. Robert Eggers&#39; unsettling, historically immersive debut is a film unlike any other."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">THE WITCH</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Witch</div>
+        <div class="hover-meta">2015 &bull; 1h 32m &bull; ★ 6.9</div>
+        <div class="hover-genre">Horror · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Rosemary&#39;s Baby"
+  data-genre="Horror · Drama"
+  data-year="1968"
+  data-duration="2h 17m"
+  data-rating="★ 8.0"
+  data-desc="A young woman suspects that an evil cult wants her unborn child to use in their rituals. Roman Polanski&#39;s quietly creeping nightmare of paranoia and violation."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">ROSEMARY'S BABY</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Rosemary's Baby</div>
+        <div class="hover-meta">1968 &bull; 2h 17m &bull; ★ 8.0</div>
+        <div class="hover-genre">Horror · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Babadook"
+  data-genre="Horror · Drama"
+  data-year="2014"
+  data-duration="1h 33m"
+  data-rating="★ 6.8"
+  data-desc="A single mother and her child fall into a deep well of paranoia when an eerie storybook appears. Jennifer Kent&#39;s debut is a devastating allegory for grief and depression."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">THE BABADOOK</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Babadook</div>
+        <div class="hover-meta">2014 &bull; 1h 33m &bull; ★ 6.8</div>
+        <div class="hover-genre">Horror · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Suspiria"
+  data-genre="Horror"
+  data-year="1977"
+  data-duration="1h 38m"
+  data-rating="★ 7.4"
+  data-desc="An American ballet student discovers that the prestigious dance academy she attends is run by a coven of witches. Dario Argento&#39;s delirious, neon-drenched horror landmark."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">SUSPIRIA</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Suspiria</div>
+        <div class="hover-meta">1977 &bull; 1h 38m &bull; ★ 7.4</div>
+        <div class="hover-genre">Horror</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="What We Do in the Shadows"
+  data-genre="Comedy · Horror"
+  data-year="2014"
+  data-duration="1h 26m"
+  data-rating="★ 7.6"
+  data-desc="A documentary team follows a group of vampire flatmates navigating modern life in New Zealand. Taika Waititi&#39;s perfectly realized mockumentary that spawned a TV empire."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">WHAT WE DO IN THE SHAD</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">What We Do in the Shadows</div>
+        <div class="hover-meta">2014 &bull; 1h 26m &bull; ★ 7.6</div>
+        <div class="hover-genre">Comedy · Horror</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-comedy">
+  <div class="section-head">
+    <h2 class="section-title">😄 Comedy</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Superbad"
+  data-genre="Comedy"
+  data-year="2007"
+  data-duration="1h 53m"
+  data-rating="★ 7.6"
+  data-desc="Two best friends try to buy alcohol for a party, setting off a night of misadventures. One of the most quotable comedies of its era, with heart beneath every joke."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">SUPERBAD</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Superbad</div>
+        <div class="hover-meta">2007 &bull; 1h 53m &bull; ★ 7.6</div>
+        <div class="hover-genre">Comedy</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Death of Stalin"
+  data-genre="Comedy · History"
+  data-year="2017"
+  data-duration="1h 47m"
+  data-rating="★ 7.3"
+  data-desc="The absurdist dark comedy depicting the political fallout following the death of Soviet dictator Joseph Stalin. Armando Iannucci&#39;s scalpel-sharp political satire."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">THE DEATH OF STALIN</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Death of Stalin</div>
+        <div class="hover-meta">2017 &bull; 1h 47m &bull; ★ 7.3</div>
+        <div class="hover-genre">Comedy · History</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Bridesmaids"
+  data-genre="Comedy"
+  data-year="2011"
+  data-duration="2h 5m"
+  data-rating="★ 6.8"
+  data-desc="A maid of honor&#39;s life unravels as she navigates the pitfalls of planning a wedding while dealing with personal failures. Kristen Wiig&#39;s sharp, warm comedy."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">BRIDESMAIDS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Bridesmaids</div>
+        <div class="hover-meta">2011 &bull; 2h 5m &bull; ★ 6.8</div>
+        <div class="hover-genre">Comedy</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Groundhog Day"
+  data-genre="Comedy · Fantasy"
+  data-year="1993"
+  data-duration="1h 41m"
+  data-rating="★ 8.0"
+  data-desc="A cynical TV weatherman finds himself living the same day over and over again. Harold Ramis&#39;s deceptively profound comedy remains one of the most re-watchable films ever made."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">GROUNDHOG DAY</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Groundhog Day</div>
+        <div class="hover-meta">1993 &bull; 1h 41m &bull; ★ 8.0</div>
+        <div class="hover-genre">Comedy · Fantasy</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Amélie"
+  data-genre="Romance · Comedy"
+  data-year="2001"
+  data-duration="2h 2m"
+  data-rating="★ 8.3"
+  data-desc="A shy waitress decides to change the lives of those around her for the better while struggling with her own isolation. Jean-Pierre Jeunet&#39;s magical, inventive French gem."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">AMÉLIE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Amélie</div>
+        <div class="hover-meta">2001 &bull; 2h 2m &bull; ★ 8.3</div>
+        <div class="hover-genre">Romance · Comedy</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Klaus"
+  data-genre="Animation · Comedy"
+  data-year="2019"
+  data-duration="1h 36m"
+  data-rating="★ 8.2"
+  data-desc="A selfish postman and a reclusive toymaker form an unlikely friendship in a cold, dark town. Netflix&#39;s gorgeous reinvention of Santa Claus lore won the BAFTA for best animated film."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">KLAUS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Klaus</div>
+        <div class="hover-meta">2019 &bull; 1h 36m &bull; ★ 8.2</div>
+        <div class="hover-genre">Animation · Comedy</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-romance">
+  <div class="section-head">
+    <h2 class="section-title">❤️ Romance</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Marriage Story"
+  data-genre="Drama · Romance"
+  data-year="2019"
+  data-duration="2h 17m"
+  data-rating="★ 7.9"
+  data-desc="A stage director and an actress struggle through a soul-crushing cross-country divorce. Noah Baumbach&#39;s most emotionally precise and painful film."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">MARRIAGE STORY</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Marriage Story</div>
+        <div class="hover-meta">2019 &bull; 2h 17m &bull; ★ 7.9</div>
+        <div class="hover-genre">Drama · Romance</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Her"
+  data-genre="Drama · Romance"
+  data-year="2013"
+  data-duration="2h 6m"
+  data-rating="★ 8.0"
+  data-desc="A lonely writer develops an unlikely relationship with an operating system designed to meet his every need. Spike Jonze&#39;s tender, visionary film about connection and loneliness."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">HER</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Her</div>
+        <div class="hover-meta">2013 &bull; 2h 6m &bull; ★ 8.0</div>
+        <div class="hover-genre">Drama · Romance</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Before Sunrise"
+  data-genre="Romance · Drama"
+  data-year="1995"
+  data-duration="1h 41m"
+  data-rating="★ 8.1"
+  data-desc="A young American man and a French woman meet on a train and agree to spend one night together in Vienna. Linklater&#39;s conversation-as-romance masterwork, the first of a beloved trilogy."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">BEFORE SUNRISE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Before Sunrise</div>
+        <div class="hover-meta">1995 &bull; 1h 41m &bull; ★ 8.1</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Call Me by Your Name"
+  data-genre="Romance · Drama"
+  data-year="2017"
+  data-duration="2h 12m"
+  data-rating="★ 7.5"
+  data-desc="A teenage boy living in Italy falls for a graduate student working for his father over one summer. Luca Guadagnino&#39;s sensual, sun-drenched ode to first love."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">CALL ME BY YOUR NAME</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Call Me by Your Name</div>
+        <div class="hover-meta">2017 &bull; 2h 12m &bull; ★ 7.5</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="In the Mood for Love"
+  data-genre="Romance · Drama"
+  data-year="2000"
+  data-duration="1h 38m"
+  data-rating="★ 8.1"
+  data-desc="Two neighbors in 1962 Hong Kong develop feelings for each other after discovering their spouses are having an affair. Wong Kar-wai&#39;s achingly beautiful study of suppressed desire."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">IN THE MOOD FOR LOVE</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">In the Mood for Love</div>
+        <div class="hover-meta">2000 &bull; 1h 38m &bull; ★ 8.1</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Normal People"
+  data-genre="Romance · Drama"
+  data-year="2020"
+  data-duration="3h 0m"
+  data-rating="★ 8.2"
+  data-desc="Connell and Marianne navigate attraction and misunderstanding across several years of young adulthood in Ireland. Hulu&#39;s stunning adaptation of Sally Rooney&#39;s novel."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">NORMAL PEOPLE</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Normal People</div>
+        <div class="hover-meta">2020 &bull; 3h 0m &bull; ★ 8.2</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Portrait of a Lady on Fire"
+  data-genre="Romance · Drama"
+  data-year="2019"
+  data-duration="2h 2m"
+  data-rating="★ 8.1"
+  data-desc="On an isolated island in Brittany at the end of the 18th century, a female painter falls in love with her subject. Céline Sciamma&#39;s exquisite, burning love story."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">PORTRAIT OF A LADY ON </div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Portrait of a Lady on Fire</div>
+        <div class="hover-meta">2019 &bull; 2h 2m &bull; ★ 8.1</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Notebook"
+  data-genre="Romance · Drama"
+  data-year="2004"
+  data-duration="2h 3m"
+  data-rating="★ 7.8"
+  data-desc="An epic love story is told through the notebook of an old man reading to a woman with dementia. One of the defining romantic films of its generation."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE NOTEBOOK</div>
+    <span class="badge badge-classic">CLASSIC</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Notebook</div>
+        <div class="hover-meta">2004 &bull; 2h 3m &bull; ★ 7.8</div>
+        <div class="hover-genre">Romance · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Your Name"
+  data-genre="Animation · Romance"
+  data-year="2016"
+  data-duration="1h 46m"
+  data-rating="★ 8.4"
+  data-desc="Two strangers find themselves linked in a bizarre way when they discover they&#39;ve been swapping bodies. Makoto Shinkai&#39;s gorgeous, genre-defining anime love story."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">YOUR NAME</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Your Name</div>
+        <div class="hover-meta">2016 &bull; 1h 46m &bull; ★ 8.4</div>
+        <div class="hover-genre">Animation · Romance</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-documentary">
+  <div class="section-head">
+    <h2 class="section-title">🎙 Documentary</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Free Solo"
+  data-genre="Documentary"
+  data-year="2018"
+  data-duration="1h 40m"
+  data-rating="★ 8.2"
+  data-desc="Alex Honnold attempts to climb the sheer face of Yosemite&#39;s El Capitan — 3,000 feet of granite — without a rope. The most terrifying and awe-inspiring documentary ever made."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">FREE SOLO</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Free Solo</div>
+        <div class="hover-meta">2018 &bull; 1h 40m &bull; ★ 8.2</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="13th"
+  data-genre="Documentary"
+  data-year="2016"
+  data-duration="1h 40m"
+  data-rating="★ 8.2"
+  data-desc="An exploration of the intersection of race, justice, and mass incarceration in the United States. Ava DuVernay&#39;s urgent and essential examination of systemic racism."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">13TH</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">13th</div>
+        <div class="hover-meta">2016 &bull; 1h 40m &bull; ★ 8.2</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Icarus"
+  data-genre="Documentary"
+  data-year="2017"
+  data-duration="2h 1m"
+  data-rating="★ 7.9"
+  data-desc="A filmmaker stumbles onto one of the biggest scandals in sports history while experimenting with performance-enhancing drugs. The documentary that helped expose Russian doping."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">ICARUS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Icarus</div>
+        <div class="hover-meta">2017 &bull; 2h 1m &bull; ★ 7.9</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Won&#39;t You Be My Neighbor?"
+  data-genre="Documentary"
+  data-year="2018"
+  data-duration="1h 34m"
+  data-rating="★ 8.4"
+  data-desc="A look at the life and legacy of Fred Rogers, whose television program was a haven of kindness and imagination for generations of children. Prepare to cry."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">WON'T YOU BE MY NEIGHB</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Won't You Be My Neighbor?</div>
+        <div class="hover-meta">2018 &bull; 1h 34m &bull; ★ 8.4</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Making a Murderer"
+  data-genre="Documentary"
+  data-year="2015"
+  data-duration="5h 30m"
+  data-rating="★ 8.6"
+  data-desc="A true-crime documentary following the case of Steven Avery, who was exonerated of a crime after 18 years, only to be arrested for murder. The docuseries that changed TV."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">MAKING A MURDERER</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Making a Murderer</div>
+        <div class="hover-meta">2015 &bull; 5h 30m &bull; ★ 8.6</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Searching for Sugar Man"
+  data-genre="Documentary"
+  data-year="2012"
+  data-duration="1h 26m"
+  data-rating="★ 8.2"
+  data-desc="A documentary about the mysterious, brilliant folk singer Rodriguez and two fans who set out to find out what became of him. A fairy-tale redemption story."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">SEARCHING FOR SUGAR MA</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Searching for Sugar Man</div>
+        <div class="hover-meta">2012 &bull; 1h 26m &bull; ★ 8.2</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Act of Killing"
+  data-genre="Documentary"
+  data-year="2012"
+  data-duration="2h 2m"
+  data-rating="★ 8.2"
+  data-desc="The men who orchestrated the 1965 Indonesian genocide are invited to re-enact their mass killings in the style of Hollywood movies. One of the most disturbing films ever made."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">THE ACT OF KILLING</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Act of Killing</div>
+        <div class="hover-meta">2012 &bull; 2h 2m &bull; ★ 8.2</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="RBG"
+  data-genre="Documentary"
+  data-year="2018"
+  data-duration="1h 38m"
+  data-rating="★ 7.3"
+  data-desc="An intimate portrait of Supreme Court Justice Ruth Bader Ginsburg, exploring her legal legacy and unlikely status as a pop culture icon. Essential viewing."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">RBG</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">RBG</div>
+        <div class="hover-meta">2018 &bull; 1h 38m &bull; ★ 7.3</div>
+        <div class="hover-genre">Documentary</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-animation">
+  <div class="section-head">
+    <h2 class="section-title">🎨 Animation</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="The Lion King"
+  data-genre="Animation · Drama"
+  data-year="1994"
+  data-duration="1h 28m"
+  data-rating="★ 8.5"
+  data-desc="A lion prince flees his kingdom only to learn the true meaning of responsibility and bravery. Disney&#39;s majestic, operatic crown jewel of its Renaissance era."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">THE LION KING</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Lion King</div>
+        <div class="hover-meta">1994 &bull; 1h 28m &bull; ★ 8.5</div>
+        <div class="hover-genre">Animation · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Coco"
+  data-genre="Animation · Family"
+  data-year="2017"
+  data-duration="1h 45m"
+  data-rating="★ 8.4"
+  data-desc="Aspiring musician Miguel is transported to the land of the dead, where he seeks the help of his late great-great-grandfather. Pixar&#39;s most culturally rich and tearful gem."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">COCO</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Coco</div>
+        <div class="hover-meta">2017 &bull; 1h 45m &bull; ★ 8.4</div>
+        <div class="hover-genre">Animation · Family</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Persepolis"
+  data-genre="Animation · Drama"
+  data-year="2007"
+  data-duration="1h 36m"
+  data-rating="★ 8.0"
+  data-desc="An animated adaptation of Marjane Satrapi&#39;s memoir about growing up during the Islamic Revolution in Iran. A vital, witty, and deeply personal coming-of-age story."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">PERSEPOLIS</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Persepolis</div>
+        <div class="hover-meta">2007 &bull; 1h 36m &bull; ★ 8.0</div>
+        <div class="hover-genre">Animation · Drama</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-biopic">
+  <div class="section-head">
+    <h2 class="section-title">🏆 Biographical</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Bohemian Rhapsody"
+  data-genre="Biography · Music"
+  data-year="2018"
+  data-duration="2h 14m"
+  data-rating="★ 7.9"
+  data-desc="A chronicle of the rock band Queen, told through the life of lead vocalist Freddie Mercury. A crowd-pleasing celebration elevated by an astonishing central performance."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">BOHEMIAN RHAPSODY</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Bohemian Rhapsody</div>
+        <div class="hover-meta">2018 &bull; 2h 14m &bull; ★ 7.9</div>
+        <div class="hover-genre">Biography · Music</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Social Network"
+  data-genre="Biography · Drama"
+  data-year="2010"
+  data-duration="2h 0m"
+  data-rating="★ 7.8"
+  data-desc="The story of the founding of Facebook as told through depositions and court proceedings. David Fincher&#39;s most perfectly engineered and endlessly rewatchable film."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">THE SOCIAL NETWORK</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Social Network</div>
+        <div class="hover-meta">2010 &bull; 2h 0m &bull; ★ 7.8</div>
+        <div class="hover-genre">Biography · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Selma"
+  data-genre="Biography · Drama"
+  data-year="2014"
+  data-duration="2h 8m"
+  data-rating="★ 7.5"
+  data-desc="The true story of Martin Luther King Jr.&#39;s historic campaign to secure voting rights for all people, leading to the 1965 Voting Rights Act. Ava DuVernay&#39;s powerful, urgent film."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">SELMA</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Selma</div>
+        <div class="hover-meta">2014 &bull; 2h 8m &bull; ★ 7.5</div>
+        <div class="hover-genre">Biography · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Rush"
+  data-genre="Biography · Sport"
+  data-year="2013"
+  data-duration="2h 3m"
+  data-rating="★ 8.1"
+  data-desc="The story of the 1976 Formula 1 rivalry between James Hunt and Niki Lauda. Ron Howard&#39;s most purely exciting film, elevated by outstanding performances from both leads."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">RUSH</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Rush</div>
+        <div class="hover-meta">2013 &bull; 2h 3m &bull; ★ 8.1</div>
+        <div class="hover-genre">Biography · Sport</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Lincoln"
+  data-genre="Biography · History"
+  data-year="2012"
+  data-duration="2h 30m"
+  data-rating="★ 7.4"
+  data-desc="As the Civil War continues to rage, Abraham Lincoln struggles to get the 13th Amendment to the Constitution passed. Spielberg and Day-Lewis deliver one of cinema&#39;s great portraits."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">LINCOLN</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Lincoln</div>
+        <div class="hover-meta">2012 &bull; 2h 30m &bull; ★ 7.4</div>
+        <div class="hover-genre">Biography · History</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="I, Tonya"
+  data-genre="Biography · Drama"
+  data-year="2017"
+  data-duration="1h 59m"
+  data-rating="★ 7.5"
+  data-desc="A biographical film about the life of American figure skater Tonya Harding and the scandal surrounding the 1994 attack on Nancy Kerrigan. Sharp, subversive, and furiously entertaining."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">I, TONYA</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">I, Tonya</div>
+        <div class="hover-meta">2017 &bull; 1h 59m &bull; ★ 7.5</div>
+        <div class="hover-genre">Biography · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Judy"
+  data-genre="Biography · Drama"
+  data-year="2019"
+  data-duration="1h 58m"
+  data-rating="★ 6.8"
+  data-desc="Thirty years after starring in The Wizard of Oz, a vulnerable and reckless Judy Garland arrives in London to perform sold out concerts. Renée Zellweger won the Oscar for her transcendent performance."
+  data-video="">
+  <div class="card-poster gc">
+    <div class="poster-text">JUDY</div>
+    <span class="badge badge-award">AWARD</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Judy</div>
+        <div class="hover-meta">2019 &bull; 1h 58m &bull; ★ 6.8</div>
+        <div class="hover-genre">Biography · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Crown"
+  data-genre="Biography · Drama"
+  data-year="2016"
+  data-duration="4h 0m"
+  data-rating="★ 8.6"
+  data-desc="The private and political lives of the Royal Family from the reign of Queen Elizabeth II. The most lavishly produced drama in television history."
+  data-video="">
+  <div class="card-poster gd">
+    <div class="poster-text">THE CROWN</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Crown</div>
+        <div class="hover-meta">2016 &bull; 4h 0m &bull; ★ 8.6</div>
+        <div class="hover-genre">Biography · Drama</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+<section class="movie-section" id="sec-western">
+  <div class="section-head">
+    <h2 class="section-title">🤠 Western</h2>
+    <a href="#" class="see-all">Browse all &rsaquo;</a>
+  </div>
+  <div class="grid"><div class="card" onclick="openModal(this)"
+  data-title="Once Upon a Time in the West"
+  data-genre="Western"
+  data-year="1968"
+  data-duration="2h 45m"
+  data-rating="★ 8.5"
+  data-desc="A mysterious stranger with a harmonica joins forces with a notorious desperado to protect a beautiful widow from a ruthless assassin. Sergio Leone&#39;s operatic and definitive Western."
+  data-video="">
+  <div class="card-poster ge">
+    <div class="poster-text">ONCE UPON A TIME IN TH</div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Once Upon a Time in the West</div>
+        <div class="hover-meta">1968 &bull; 2h 45m &bull; ★ 8.5</div>
+        <div class="hover-genre">Western</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="The Good, the Bad and the Ugly"
+  data-genre="Western"
+  data-year="1966"
+  data-duration="2h 58m"
+  data-rating="★ 8.8"
+  data-desc="A bounty hunting scam joins two men in an uneasy alliance against a third in a race to find a fortune in gold buried in a remote cemetery. The apex of the Spaghetti Western."
+  data-video="">
+  <div class="card-poster gf">
+    <div class="poster-text">THE GOOD, THE BAD AND </div>
+    <span class="badge badge-top">TOP RATED</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">The Good, the Bad and the Ugly</div>
+        <div class="hover-meta">1966 &bull; 2h 58m &bull; ★ 8.8</div>
+        <div class="hover-genre">Western</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="True Grit"
+  data-genre="Western"
+  data-year="2010"
+  data-duration="1h 50m"
+  data-rating="★ 7.6"
+  data-desc="A stubborn teenager enlists the help of a tough U.S. Marshal to track down her father&#39;s murderer. The Coen Brothers&#39; lean, funny, and thrilling Western masterpiece."
+  data-video="">
+  <div class="card-poster gg">
+    <div class="poster-text">TRUE GRIT</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">True Grit</div>
+        <div class="hover-meta">2010 &bull; 1h 50m &bull; ★ 7.6</div>
+        <div class="hover-genre">Western</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Unforgiven"
+  data-genre="Western"
+  data-year="1992"
+  data-duration="2h 10m"
+  data-rating="★ 8.2"
+  data-desc="Retired Old West gunslinger William Munny reluctantly takes on one last job with his old partner and a young man. Clint Eastwood&#39;s elegiac, Oscar-winning deconstruction of the Western myth."
+  data-video="">
+  <div class="card-poster gh">
+    <div class="poster-text">UNFORGIVEN</div>
+    <span class="badge badge-award">AWARD</span>
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Unforgiven</div>
+        <div class="hover-meta">1992 &bull; 2h 10m &bull; ★ 8.2</div>
+        <div class="hover-genre">Western</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="There Will Be Blood"
+  data-genre="Western · Drama"
+  data-year="2007"
+  data-duration="2h 38m"
+  data-rating="★ 8.2"
+  data-desc="A story of family, religion, hatred, oil and madness, following a determined man who becomes a powerful oil prospector. Paul Thomas Anderson&#39;s monumental film with Daniel Day-Lewis at his peak."
+  data-video="">
+  <div class="card-poster ga">
+    <div class="poster-text">THERE WILL BE BLOOD</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">There Will Be Blood</div>
+        <div class="hover-meta">2007 &bull; 2h 38m &bull; ★ 8.2</div>
+        <div class="hover-genre">Western · Drama</div>
+      </div>
+    </div>
+  </div>
+</div><div class="card" onclick="openModal(this)"
+  data-title="Hostiles"
+  data-genre="Western · Drama"
+  data-year="2017"
+  data-duration="2h 14m"
+  data-rating="★ 7.3"
+  data-desc="In 1892, a legendary Army captain reluctantly agrees to escort a dying Cheyenne war chief and his family through dangerous territory. Scott Cooper&#39;s brooding, beautiful revisionist Western."
+  data-video="">
+  <div class="card-poster gb">
+    <div class="poster-text">HOSTILES</div>
+    
+    <div class="card-hover">
+      <div class="hover-play"><svg viewBox="0 0 24 24" fill="white" width="32" height="32"><path d="M8 5v14l11-7z"/></svg></div>
+      <div class="hover-info">
+        <div class="hover-title">Hostiles</div>
+        <div class="hover-meta">2017 &bull; 2h 14m &bull; ★ 7.3</div>
+        <div class="hover-genre">Western · Drama</div>
+      </div>
+    </div>
+  </div>
+</div></div>
+</section>
+</main>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div>
+    <span class="footer-logo">Stream<span>Vault</span></span>
+    <p>The best films from every era and every corner of the world. Stream in stunning quality, anytime.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Browse</h4>
+    <ul>
+      <li><a href="#">New Releases</a></li>
+      <li><a href="#">Top Rated</a></li>
+      <li><a href="#">Classics</a></li>
+      <li><a href="#">Award Winners</a></li>
+      <li><a href="#">World Cinema</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Account</h4>
+    <ul>
+      <li><a href="#" onclick="openSignIn();return false;">Sign In</a></li>
+      <li><a href="#">Subscribe</a></li>
+      <li><a href="#">My List</a></li>
+      <li><a href="#">Watch History</a></li>
+      <li><a href="#">Settings</a></li>
+    </ul>
+  </div>
+  <div class="footer-col">
+    <h4>Company</h4>
+    <ul>
+      <li><a href="#">About</a></li>
+      <li><a href="#">Careers</a></li>
+      <li><a href="#">Press</a></li>
+      <li><a href="#">Privacy Policy</a></li>
+      <li><a href="#">Terms of Use</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <span>&copy; 2025 StreamVault. All rights reserved.</span>
+  <span>Stream in 4K &bull; Dolby Atmos &bull; No Ads</span>
+</div>
+
+<!-- ── MOVIE MODAL ── -->
+<div class="modal-backdrop" id="movieModal" onclick="handleModalBackdrop(event)">
+  <div class="modal" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModal()">&#10005;</button>
+    <div class="modal-video-area" id="modal-video-area">
+      <div class="modal-video-placeholder">
+        <div class="modal-play-btn">
+          <svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z"/></svg>
+        </div>
+        <span>No video linked yet</span>
+      </div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-title" id="modal-title"></div>
+      <div class="modal-tags" id="modal-tags"></div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-actions">
+        <button class="modal-btn-play">
+          <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7z"/></svg>
+          Play
+        </button>
+        <button class="modal-btn-ghost">+ My List</button>
+        <button class="modal-btn-ghost">Download</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── SEARCH OVERLAY ── -->
+<div class="search-overlay" id="searchOverlay" onclick="handleSearchBackdrop(event)">
+  <div class="search-inner">
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" class="search-input" id="searchInput" placeholder="Search films..." oninput="doSearch(this.value)" autocomplete="off">
+      <button class="search-x" onclick="closeSearch()">&#10005;</button>
+    </div>
+    <div id="search-results-area">
+      <div class="search-quick-label">Quick picks</div>
+      <div class="search-quick" id="quick-picks">
+        <button class="quick-pill" onclick="doSearch('Action');document.getElementById('searchInput').value='Action'">Action</button>
+        <button class="quick-pill" onclick="doSearch('Drama');document.getElementById('searchInput').value='Drama'">Drama</button>
+        <button class="quick-pill" onclick="doSearch('Classic');document.getElementById('searchInput').value='Classic'">Classics</button>
+        <button class="quick-pill" onclick="doSearch('Sci-Fi');document.getElementById('searchInput').value='Sci-Fi'">Sci-Fi</button>
+        <button class="quick-pill" onclick="doSearch('Horror');document.getElementById('searchInput').value='Horror'">Horror</button>
+        <button class="quick-pill" onclick="doSearch('2023');document.getElementById('searchInput').value='2023'">2023</button>
+        <button class="quick-pill" onclick="doSearch('2024');document.getElementById('searchInput').value='2024'">2024</button>
+        <button class="quick-pill" onclick="doSearch('Award');document.getElementById('searchInput').value='Award'">Award Winners</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!-- SIGN IN OVERLAY -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="auth-overlay" id="signinOverlay" onclick="handleAuthBackdrop(event,'signinOverlay')">
+  <div class="auth-box" onclick="event.stopPropagation()">
+    <button class="auth-close" onclick="closeAuth('signinOverlay')">&#10005;</button>
+    <span class="auth-logo">Stream<span>Vault</span></span>
+    <div class="auth-title">Welcome back</div>
+    <div class="auth-subtitle">Sign in to continue watching</div>
+
+    <div class="auth-field">
+      <label>Email address</label>
+      <input type="email" id="signin-email" placeholder="you@example.com" autocomplete="email">
+    </div>
+
+    <div class="auth-field">
+      <div class="auth-field-row">
+        <label>Password</label>
+        <a href="#" class="auth-forgot" onclick="switchAuth('signinOverlay','forgotOverlay');return false;">Forgot password?</a>
+      </div>
+      <div class="password-wrap">
+        <input type="password" id="signin-password" placeholder="Enter your password" autocomplete="current-password">
+        <button class="toggle-pw" onclick="togglePw('signin-password',this)" type="button">SHOW</button>
+      </div>
+    </div>
+
+    <button class="auth-btn" onclick="handleSignIn()">Sign In</button>
+
+    <div class="auth-divider">or</div>
+
+    <div class="auth-switch">
+      New to StreamVault? <a href="#" onclick="switchAuth('signinOverlay','signupOverlay');return false;">Create an account</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!-- SIGN UP OVERLAY -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="auth-overlay" id="signupOverlay" onclick="handleAuthBackdrop(event,'signupOverlay')">
+  <div class="auth-box" onclick="event.stopPropagation()">
+    <button class="auth-close" onclick="closeAuth('signupOverlay')">&#10005;</button>
+    <span class="auth-logo">Stream<span>Vault</span></span>
+    <div class="auth-title">Create your account</div>
+    <div class="auth-subtitle">Join millions of film lovers on StreamVault</div>
+
+    <div class="auth-field">
+      <label>Full name</label>
+      <input type="text" id="signup-name" placeholder="John Doe" autocomplete="name">
+    </div>
+
+    <div class="auth-field">
+      <label>Email address</label>
+      <input type="email" id="signup-email" placeholder="you@example.com" autocomplete="email">
+    </div>
+
+    <div class="auth-field">
+      <label>Password</label>
+      <div class="password-wrap">
+        <input type="password" id="signup-password" placeholder="Create a strong password" autocomplete="new-password" oninput="checkStrength(this.value)">
+        <button class="toggle-pw" onclick="togglePw('signup-password',this)" type="button">SHOW</button>
+      </div>
+      <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
+      <div class="strength-label" id="strength-label"></div>
+    </div>
+
+    <div class="auth-field">
+      <label>Confirm password</label>
+      <div class="password-wrap">
+        <input type="password" id="signup-confirm" placeholder="Repeat your password" autocomplete="new-password">
+        <button class="toggle-pw" onclick="togglePw('signup-confirm',this)" type="button">SHOW</button>
+      </div>
+    </div>
+
+    <button class="auth-btn" onclick="handleSignUp()">Create Account</button>
+
+    <div class="auth-terms">
+      By signing up you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+    </div>
+
+    <div class="auth-switch">
+      Already have an account? <a href="#" onclick="switchAuth('signupOverlay','signinOverlay');return false;">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<!-- FORGOT PASSWORD OVERLAY -->
+<!-- ══════════════════════════════════════════════════════════════════════ -->
+<div class="auth-overlay" id="forgotOverlay" onclick="handleAuthBackdrop(event,'forgotOverlay')">
+  <div class="auth-box" onclick="event.stopPropagation()">
+    <button class="auth-close" onclick="closeAuth('forgotOverlay')">&#10005;</button>
+    <span class="auth-logo">Stream<span>Vault</span></span>
+
+    <!-- Step 1: Enter email -->
+    <div id="forgot-step1">
+      <div class="auth-title">Reset password</div>
+      <div class="auth-subtitle">Enter the email address linked to your account and we&#39;ll send you a reset link.</div>
+
+      <div class="auth-field">
+        <label>Email address</label>
+        <input type="email" id="forgot-email" placeholder="you@example.com" autocomplete="email">
+      </div>
+
+      <button class="auth-btn" onclick="handleForgot()">Send Reset Link</button>
+    </div>
+
+    <!-- Step 2: Confirmation (shown after submit) -->
+    <div id="forgot-step2" style="display:none">
+      <div class="auth-success">
+        <div class="auth-success-icon">✉</div>
+        <h3>Check your inbox</h3>
+        <p>We&#39;ve sent a password reset link to <strong id="forgot-email-display" style="color:var(--white)"></strong>. It expires in 15 minutes.</p>
+        <button class="auth-btn" onclick="switchAuth('forgotOverlay','signinOverlay')">Back to Sign In</button>
+      </div>
+    </div>
+
+    <div id="forgot-back" class="auth-switch">
+      Remember it now? <a href="#" onclick="switchAuth('forgotOverlay','signinOverlay');return false;">Sign in</a>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ── AUTH ────────────────────────────────────────────────────────────────────
+function openSignIn() {
+  document.getElementById('signinOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('signin-email').focus(), 100);
+}
+
+function closeAuth(id) {
+  document.getElementById(id).classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function switchAuth(fromId, toId) {
+  document.getElementById(fromId).classList.remove('open');
+  document.getElementById(toId).classList.add('open');
+  // focus first input in new panel
+  const first = document.querySelector('#' + toId + ' input');
+  if (first) setTimeout(() => first.focus(), 100);
+}
+
+function handleAuthBackdrop(e, id) {
+  if (e.target === e.currentTarget) closeAuth(id);
+}
+
+function togglePw(inputId, btn) {
+  const input = document.getElementById(inputId);
+  const shown = input.type === 'text';
+  input.type = shown ? 'password' : 'text';
+  btn.textContent = shown ? 'SHOW' : 'HIDE';
+}
+
+function checkStrength(val) {
+  const fill = document.getElementById('strength-fill');
+  const label = document.getElementById('strength-label');
+  if (!fill) return;
+  let score = 0;
+  if (val.length >= 8)  score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const levels = [
+    { w: '0%',   color: 'var(--faint)', text: '' },
+    { w: '25%',  color: '#e50914',      text: 'Weak' },
+    { w: '50%',  color: '#e57914',      text: 'Fair' },
+    { w: '75%',  color: '#e5c914',      text: 'Good' },
+    { w: '100%', color: '#14e550',      text: 'Strong' },
+  ];
+  const lv = levels[score] || levels[0];
+  fill.style.width = lv.w;
+  fill.style.background = lv.color;
+  label.textContent = lv.text;
+  label.style.color = lv.color;
+}
+
+function handleSignIn() {
+  const email = document.getElementById('signin-email').value.trim();
+  const pw    = document.getElementById('signin-password').value;
+  if (!email) { shakeField('signin-email'); return; }
+  if (!pw)    { shakeField('signin-password'); return; }
+  if (!isValidEmail(email)) { shakeField('signin-email'); return; }
+  // ── Replace this block with your real auth logic ──
+  closeAuth('signinOverlay');
+  showToast('Signed in as ' + email);
+}
+
+function handleSignUp() {
+  const name    = document.getElementById('signup-name').value.trim();
+  const email   = document.getElementById('signup-email').value.trim();
+  const pw      = document.getElementById('signup-password').value;
+  const confirm = document.getElementById('signup-confirm').value;
+  if (!name)                   { shakeField('signup-name');     return; }
+  if (!email || !isValidEmail(email)) { shakeField('signup-email');    return; }
+  if (pw.length < 6)           { shakeField('signup-password'); return; }
+  if (pw !== confirm)          { shakeField('signup-confirm');  return; }
+  // ── Replace this block with your real auth logic ──
+  closeAuth('signupOverlay');
+  showToast('Account created! Welcome, ' + name.split(' ')[0] + ' 🎬');
+}
+
+function handleForgot() {
+  const email = document.getElementById('forgot-email').value.trim();
+  if (!email || !isValidEmail(email)) { shakeField('forgot-email'); return; }
+  document.getElementById('forgot-email-display').textContent = email;
+  document.getElementById('forgot-step1').style.display = 'none';
+  document.getElementById('forgot-step2').style.display = 'block';
+  document.getElementById('forgot-back').style.display  = 'none';
+}
+
+function isValidEmail(e) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+
+function shakeField(id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.style.borderColor = 'var(--red)';
+  el.style.animation = 'none';
+  el.offsetHeight; // reflow
+  el.style.animation = 'shake 0.4s ease';
+  el.focus();
+  setTimeout(() => { el.style.borderColor = ''; el.style.animation = ''; }, 800);
+}
+
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  Object.assign(t.style, {
+    position:'fixed', bottom:'2rem', left:'50%', transform:'translateX(-50%) translateY(20px)',
+    background:'#222', color:'#fff', padding:'0.75rem 1.5rem', borderRadius:'4px',
+    fontSize:'0.85rem', zIndex:'1000', opacity:'0',
+    transition:'all 0.3s', border:'1px solid var(--faint)', whiteSpace:'nowrap'
+  });
+  document.body.appendChild(t);
+  requestAnimationFrame(() => { t.style.opacity='1'; t.style.transform='translateX(-50%) translateY(0)'; });
+  setTimeout(() => {
+    t.style.opacity='0'; t.style.transform='translateX(-50%) translateY(10px)';
+    setTimeout(() => t.remove(), 300);
+  }, 3000);
+}
+
+
+
+// ── MODAL ──────────────────────────────────────────────────────────────────
+function openModal(card) {
+  const d = card.dataset;
+  document.getElementById('modal-title').textContent = d.title;
+  document.getElementById('modal-desc').textContent = d.desc;
+
+  const tags = document.getElementById('modal-tags');
+  tags.innerHTML = '';
+  [{v:d.rating,cls:'rating-tag'},{v:d.year},{v:d.duration},{v:d.genre},{v:'4K UHD'}].forEach(({v,cls})=>{
+    const s = document.createElement('span');
+    s.className = 'modal-tag' + (cls ? ' '+cls : '');
+    s.textContent = v;
+    tags.appendChild(s);
+  });
+
+  const va = document.getElementById('modal-video-area');
+  if (d.video) {
+    va.innerHTML = `<video controls autoplay style="width:100%;height:100%;background:#000" src="${d.video}"></video>`;
+  } else if (d.poster) {
+    va.style.backgroundImage = `url('${d.poster}')`;
+    va.style.backgroundSize = 'cover';
+    va.style.backgroundPosition = 'center top';
+    va.innerHTML = `<div class="modal-video-placeholder" style="background:rgba(0,0,0,0.55);position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;"><div class="modal-play-btn"><svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z"/></svg></div><span style="margin-top:0.8rem">No video linked yet</span></div>`;
+  } else {
+    va.style.backgroundImage = '';
+    va.innerHTML = `<div class="modal-video-placeholder"><div class="modal-play-btn"><svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z"/></svg></div><span>No video linked yet &mdash; add data-video="" to this card</span></div>`;
+  }
+
+  document.getElementById('movieModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function openHeroModal() {
+  const fakeCard = {dataset:{title:'The Dark Knight',genre:'Action · Crime',year:'2008',duration:'2h 32m',rating:'★ 9.0',desc:"Batman battles the Joker, a criminal mastermind who plunges Gotham City into anarchy. Christopher Nolan's defining superhero film and one of cinema's greatest crime epics.",video:''}};
+  openModal(fakeCard);
+}
+
+function closeModal() {
+  const va = document.getElementById('modal-video-area');
+  va.style.backgroundImage = '';
+  va.innerHTML = '<div class="modal-video-placeholder"><div class="modal-play-btn"><svg viewBox="0 0 24 24" fill="white" width="28" height="28"><path d="M8 5v14l11-7z"/></svg></div><span>No video linked yet</span></div>';
+  document.getElementById('movieModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function handleModalBackdrop(e) { if(e.target===e.currentTarget) closeModal(); }
+
+// ── SEARCH ──────────────────────────────────────────────────────────────────
+function openSearch() {
+  document.getElementById('searchOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(()=>document.getElementById('searchInput').focus(), 80);
+}
+
+function closeSearch() {
+  document.getElementById('searchOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+  document.getElementById('searchInput').value = '';
+  resetSearch();
+}
+
+function handleSearchBackdrop(e) { if(e.target===e.currentTarget) closeSearch(); }
+
+function doSearch(q) {
+  const area = document.getElementById('search-results-area');
+  if (!q.trim()) { resetSearch(); return; }
+  const ql = q.toLowerCase();
+
+  // Read directly from the cards in the page — no separate array needed
+  const allCards = Array.from(document.querySelectorAll('.card[data-title]'));
+  const matches = allCards.filter(card => {
+    const d = card.dataset;
+    return (d.title || '').toLowerCase().includes(ql) ||
+           (d.genre || '').toLowerCase().includes(ql) ||
+           (d.year  || '').includes(ql) ||
+           (d.desc  || '').toLowerCase().includes(ql);
+  });
+
+  if (!matches.length) {
+    area.innerHTML = '<div class="search-hint">No results found</div>';
+    return;
+  }
+
+  area.innerHTML = `<div class="search-hint">${matches.length} result${matches.length !== 1 ? 's' : ''} found</div>
+    <div class="search-results">${
+      matches.map(card => {
+        const d = card.dataset;
+        return `<button class="search-result-pill" onclick="closeSearch(); openModal(document.querySelector('.card[data-title=\'${d.title.replace(/'/g,"\\'")}\']'))">
+          <strong>${d.title}</strong>
+          <span>${d.genre} &bull; ${d.year} &bull; ${d.rating}</span>
+        </button>`;
+      }).join('')
+    }</div>`;
+}
+
+function resetSearch() {
+  document.getElementById('search-results-area').innerHTML = `
+    <div class="search-quick-label">Quick picks</div>
+    <div class="search-quick">
+      <button class="quick-pill" onclick="doSearch('Action');document.getElementById('searchInput').value='Action'">Action</button>
+      <button class="quick-pill" onclick="doSearch('Drama');document.getElementById('searchInput').value='Drama'">Drama</button>
+      <button class="quick-pill" onclick="doSearch('Classic');document.getElementById('searchInput').value='Classic'">Classics</button>
+      <button class="quick-pill" onclick="doSearch('Sci-Fi');document.getElementById('searchInput').value='Sci-Fi'">Sci-Fi</button>
+      <button class="quick-pill" onclick="doSearch('Horror');document.getElementById('searchInput').value='Horror'">Horror</button>
+      <button class="quick-pill" onclick="doSearch('2023');document.getElementById('searchInput').value='2023'">2023</button>
+      <button class="quick-pill" onclick="doSearch('2024');document.getElementById('searchInput').value='2024'">2024</button>
+      <button class="quick-pill" onclick="doSearch('Award');document.getElementById('searchInput').value='Award'">Award Winners</button>
+    </div>`;
+}
+
+// ── GENRE FILTER ────────────────────────────────────────────────────────────
+function filterGenre(key, btn) {
+  document.querySelectorAll('.genre-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.movie-section').forEach(sec=>{
+    sec.style.display = (key==='all' || sec.id==='sec-'+key) ? '' : 'none';
+  });
+  if (key !== 'all') {
+    const el = document.getElementById('sec-'+key);
+    if (el) { setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}), 50); }
+  }
+}
+
+// ── KEYBOARD ────────────────────────────────────────────────────────────────
+document.addEventListener('keydown', e=>{
+  if (e.key==='Escape') { closeModal(); closeSearch(); ['signinOverlay','signupOverlay','forgotOverlay'].forEach(closeAuth); }
+  if ((e.key==='/' || (e.key==='k' && (e.metaKey||e.ctrlKey))) && !document.getElementById('searchOverlay').classList.contains('open')) {
+    e.preventDefault(); openSearch();
+  }
+});
+
+// ── APPLY POSTER IMAGES TO CARDS ────────────────────────────────────────────
+document.querySelectorAll('.card').forEach(card => {
+  const poster = card.dataset.poster;
+  if (poster) {
+    const posterEl = card.querySelector('.card-poster');
+    posterEl.classList.add('has-poster');
+    const img = document.createElement('img');
+    img.className = 'poster-img';
+    img.src = poster;
+    img.alt = card.dataset.title || '';
+    img.loading = 'lazy';
+    posterEl.insertBefore(img, posterEl.firstChild);
+  }
+});
+
+// ── NAV SCROLL EFFECT ───────────────────────────────────────────────────────
+window.addEventListener('scroll', ()=>{
+  document.getElementById('navbar').style.background =
+    window.scrollY > 40 ? 'rgba(15,15,15,0.98)' : '';
+});
+</script>
+</body>
+</html>
